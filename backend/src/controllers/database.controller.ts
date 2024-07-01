@@ -7,6 +7,22 @@ const databaseService = new DatabaseService();
 
 export const DatabaseController = new Hono();
 
+DatabaseController.get("/me", async (c) => {
+  const auth = getAuth(c);
+
+  console.log(auth);
+
+  if (!auth?.userId) {
+    return c.json(UnauthorizedError, 401);
+  }
+
+  console.log(auth.userId);
+
+  const databases = await databaseService.findMy(auth.userId!);
+
+  return c.json(databases);
+});
+
 DatabaseController.get("/:id", async (c) => {
   const { id } = c.req.param();
 
@@ -15,17 +31,6 @@ DatabaseController.get("/:id", async (c) => {
   return c.json(database);
 });
 
-DatabaseController.get("/me", async (c) => {
-  const auth = getAuth(c);
-
-  if (!auth?.userId) {
-    return c.json(UnauthorizedError, 401);
-  }
-
-  const databases = await databaseService.findMy(auth.userId!);
-
-  return c.json(databases);
-});
 
 DatabaseController.get("/:id/tables", async (c) => {
   const { id } = c.req.param();
