@@ -2,6 +2,7 @@
 
 import ProviderIcon from "@/components/provider-icon/provider-icon";
 import { useAuth } from "@clerk/nextjs";
+import Link from "next/link";
 import useSWR from "swr";
 
 export default function Home() {
@@ -41,19 +42,30 @@ export default function Home() {
   }
 
   return (
-    <div className="">
-      {data.map((database: any) => (
-        <button
-          key={database.id}
-          className="flex items-center border px-3 py-2 rounded-lg w-full"
+    <div className="w-full flex flex-col">
+      <div className="w-full flex items-center justify-between mb-4">
+        <p className="text-2xl font-semibold">My Databases</p>
+        <Link
+          href={"/databases/new"}
+          className=" bg-black px-4 py-1 rounded-md text-white hover:bg-black/80"
         >
-          <ProviderIcon provider={database.provider} />
-          <div className="ml-3 text-start">
-            <p className="font-semibold text-lg">{database.name}</p>
-            <p className="text-sm -mt-1.5">{database.type}</p>
-          </div>
-        </button>
-      ))}
+          Add Database
+        </Link>
+      </div>
+      <div className="flex flex-col gap-y-2">
+        {data.map((database: any) => (
+          <button
+            key={database.id}
+            className="flex items-center border px-3 py-2 rounded-lg w-full"
+          >
+            <ProviderIcon provider={database.provider} />
+            <div className="ml-3 text-start">
+              <p className="font-semibold text-lg">{database.name}</p>
+              <p className="text-sm -mt-1.5">{database.type}</p>
+            </div>
+          </button>
+        ))}
+      </div>
     </div>
   );
 }
