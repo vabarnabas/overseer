@@ -20,7 +20,7 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <html lang="en">
+      <html lang="en" className="text-rich-black">
         <head>
           <meta
             name="viewport"
@@ -35,7 +35,7 @@ export default function RootLayout({
         >
           <Sidebar />
           <Navbar />
-          <div className="w-full pl-[15.5rem] pr-4 pb-4 pt-[5.5rem] md:pr-6 flex-grow flex flex-col">
+          <div className="w-full pl-[19.5rem] pr-4 pb-4 pt-[5.5rem] md:pr-6 flex-grow flex flex-col">
             {children}
           </div>
         </body>

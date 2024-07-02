@@ -1,8 +1,11 @@
 "use client";
+import DatabaseTableRow from "@/components/database-table-row/database-table-row";
 import ProviderIcon from "@/components/provider-icon/provider-icon";
 import { useAuth } from "@clerk/nextjs";
+import { AnimatePresence } from "framer-motion";
 import { useParams } from "next/navigation";
 import React from "react";
+import { BiChevronDown } from "react-icons/bi";
 import useSWRImmutable from "swr/immutable";
 
 export default function SpecificDatabase() {
@@ -53,25 +56,22 @@ export default function SpecificDatabase() {
   return (
     <div>
       <div className="flex items-center w-full">
-        <ProviderIcon provider={data.database.provider} />
+        <div className="text-4xl text-primary">
+          <ProviderIcon provider={data.database.provider} />
+        </div>
         <div className="ml-3 text-start">
-          <p className="font-semibold text-xl">{data.database.name}</p>
+          <p className="font-semibold text-2xl">{data.database.name}</p>
           <p className="text-sm opacity-60 -mt-1">{data.database.type}</p>
         </div>
       </div>
-      <p className="text-2xl font-semibold mt-6 mb-4">Tables</p>
-      <div className="flex flex-col">
-        {data.tables.map((table: any) => (
-          <div
-            key={table.tableName}
-            className="flex items-center border px-3 py-2 rounded-lg w-full"
-          >
-            <div className="ml-3 text-start">
-              <p className="font-semibold text-lg">{table.tableName}</p>
-            </div>
-          </div>
-        ))}
-      </div>
+      <p className="text-2xl font-semibold mt-6 mb-4">Schema</p>
+      <AnimatePresence>
+        <div className="flex flex-col gap-y-1">
+          {data.tables.map((table: any) => (
+            <DatabaseTableRow key={table.tableName} table={table} />
+          ))}
+        </div>
+      </AnimatePresence>
     </div>
   );
 }

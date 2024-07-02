@@ -7,6 +7,7 @@ import { useAuth, useUser } from "@clerk/nextjs";
 import { zodResolver } from "@hookform/resolvers/zod";
 import clsx from "clsx";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { BiLogoPostgresql } from "react-icons/bi";
@@ -17,6 +18,7 @@ import useSWRMutation from "swr/mutation";
 export default function NewDatabasePage() {
   const { getToken } = useAuth();
   const { user } = useUser();
+  const router = useRouter();
 
   const providers = [
     {
@@ -60,20 +62,21 @@ export default function NewDatabasePage() {
     formState: { errors },
   } = form;
 
-  console.log(errors, getValues());
-
   const { trigger } = useSWRMutation(
     "/databases",
     async (url, { arg: formValues }: { arg: CreateDatabase }) => {
       const token = await getToken();
 
-      await fetch(`${process.env.NEXT_PUBLIC_API_URL}${url}`, {
-        method: "POST",
-        body: JSON.stringify({ ...formValues, userId: user!.id }),
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      try {
+        await fetch(`${process.env.NEXT_PUBLIC_API_URL}${url}`, {
+          method: "POST",
+          body: JSON.stringify({ ...formValues, userId: user!.id }),
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+      } catch {}
+      router.push("/");
     }
   );
 
@@ -108,7 +111,7 @@ export default function NewDatabasePage() {
           </div>
           <div className="">
             <p className="text-sm font-medium mb-1">Database Provider</p>
-            <div className="grid grid-cols-2 border rounded-lg overflow-hidden">
+            <div className="grid grid-cols-2 border rounded-lg overflow-hidden p-1 gap-1">
               {providers.map((provider) => (
                 <button
                   onClick={(e) => {
@@ -117,11 +120,17 @@ export default function NewDatabasePage() {
                   }}
                   key={provider.name}
                   className={clsx(
-                    "flex flex-col items-center justify-center gap-y-2 p-4 hover:bg-slate-50",
+                    "flex flex-col items-center justify-center gap-y-2 p-4 hover:bg-slate-50 rounded-lg",
                     getValues("provider") === provider.value && "bg-slate-100"
                   )}
                 >
-                  {provider.icon}
+                  <span
+                    className={clsx(
+                      getValues("provider") === provider.value && "text-primary"
+                    )}
+                  >
+                    {provider.icon}
+                  </span>
                   <p className="">{provider.name}</p>
                 </button>
               ))}
@@ -129,7 +138,7 @@ export default function NewDatabasePage() {
           </div>
           <div className="">
             <p className="text-sm font-medium mb-1">Database Type</p>
-            <div className="grid grid-cols-2 border rounded-lg overflow-hidden">
+            <div className="grid grid-cols-2 border rounded-lg overflow-hidden p-1 gap-1">
               {systems.map((system) => (
                 <button
                   onClick={(e) => {
@@ -138,17 +147,23 @@ export default function NewDatabasePage() {
                   }}
                   key={system.name}
                   className={clsx(
-                    "flex flex-col items-center justify-center gap-y-2 p-4 hover:bg-slate-50",
+                    "flex flex-col items-center justify-center gap-y-2 p-4 hover:bg-slate-50 rounded-lg",
                     getValues("type") === system.value && "bg-slate-100"
                   )}
                 >
-                  {system.icon}
+                  <span
+                    className={clsx(
+                      getValues("type") === system.value && "text-primary"
+                    )}
+                  >
+                    {system.icon}
+                  </span>
                   <p className="">{system.name}</p>
                 </button>
               ))}
             </div>
           </div>
-          <button className="w-full bg-black px-4 py-1.5 rounded-md text-white hover:bg-black/80 flex justify-center">
+          <button className="w-full bg-primary px-4 py-1.5 rounded-md text-white hover:bg-primary-darker flex justify-center">
             Add Database
           </button>
         </form>

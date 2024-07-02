@@ -69,20 +69,24 @@ export class DatabaseService {
       return await this.withPostgresClient(connectionString, async (client) => {
         const schema = await client.query(getTablesAndColumnsQuery);
 
-        const tableMap = new Map<string, string[]>();
+        const tableMap = new Map<string, { name: string; type: string }[]>();
 
         schema.rows.forEach(
           ({
             table_name,
             column_name,
+            data_type,
           }: {
             table_name: string;
             column_name: string;
+            data_type: string;
           }) => {
             if (!tableMap.has(table_name)) {
               tableMap.set(table_name, []);
             }
-            tableMap.get(table_name)?.push(column_name);
+            tableMap
+              .get(table_name)
+              ?.push({ name: column_name, type: data_type });
           }
         );
 

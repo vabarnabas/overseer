@@ -36,9 +36,13 @@ DatabaseController.get("/:id/tables", async (c) => {
     return c.json({ error: "Database Not Found" }, 404);
   }
 
+  const decryptedConnectionString = databaseService.decrypt(
+    database.connectionString
+  );
+
   const tables = await databaseService.getTables(
     database.type,
-    database.connectionString
+    decryptedConnectionString
   );
 
   if (!tables) {

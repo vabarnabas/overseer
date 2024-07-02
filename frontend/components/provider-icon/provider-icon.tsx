@@ -10,10 +10,10 @@ interface Props {
 export default function ProviderIcon({ provider }: Props) {
   switch (provider) {
     case "railway":
-      return <SiRailway className="text-3xl" />;
+      return <SiRailway />;
     case "fly":
-      return <FaFly className="text-3xl" />;
+      return <FaFly />;
     default:
-      return <FaDatabase className="text-3xl" />;
+      return <FaDatabase />;
   }
 }

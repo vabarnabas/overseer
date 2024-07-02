@@ -1,72 +1,24 @@
 "use client";
 
 import ProviderIcon from "@/components/provider-icon/provider-icon";
+import DatabasesSection from "@/components/sections/databases-section";
 import { useAuth } from "@clerk/nextjs";
 import Link from "next/link";
 import useSWR from "swr";
 
 export default function Home() {
-  const { getToken } = useAuth();
-
-  const { data, isValidating, error } = useSWR(
-    "/databases/me",
-    async (url) => {
-      const token = await getToken();
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${url}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      return await res.json();
-    },
-    {
-      revalidateOnFocus: false,
-      revalidateIfStale: false,
-      revalidateOnMount: true,
-      refreshInterval: 0,
-    }
-  );
-
-  if (isValidating) {
-    return (
-      <div className="flex flex-grow justify-center items-center">
-        Loading...
-      </div>
-    );
-  }
-
-  if (error || !data) {
-    return (
-      <div className="flex flex-grow justify-center items-center">
-        {`We couldn't fetch your databases. Please try again later.`}
-      </div>
-    );
-  }
-
   return (
-    <div className="w-full flex flex-col">
+    <div className="w-full flex flex-col flex-grow">
       <div className="w-full flex items-center justify-between mb-4">
         <p className="text-2xl font-semibold">My Databases</p>
         <Link
           href={"/databases/new"}
-          className=" bg-black px-4 py-1.5 rounded-md text-white hover:bg-black/80"
+          className=" bg-primary hover:bg-primary-darker px-4 py-1.5 text-sm rounded-md text-white hover:bg-black/80"
         >
           Add Database
         </Link>
       </div>
-      <div className="flex flex-col gap-y-1.5">
-        {data.map((database: any) => (
-          <Link
-            href={`/databases/${database.id}`}
-            key={database.id}
-            className="flex items-center border px-3 py-2 rounded-lg w-full"
-          >
-            <ProviderIcon provider={database.provider} />
-            <div className="ml-3 text-start">
-              <p className="font-semibold text-xl">{database.name}</p>
-              <p className="text-sm opacity-60 -mt-1">{database.type}</p>
-            </div>
-          </Link>
-        ))}
-      </div>
+      <DatabasesSection />
     </div>
   );
 }
