@@ -47,12 +47,12 @@ export default function Home() {
         <p className="text-2xl font-semibold">My Databases</p>
         <Link
           href={"/databases/new"}
-          className=" bg-black px-4 py-1 rounded-md text-white hover:bg-black/80"
+          className=" bg-black px-4 py-1.5 rounded-md text-white hover:bg-black/80"
         >
           Add Database
         </Link>
       </div>
-      <div className="flex flex-col gap-y-2">
+      <div className="flex flex-col gap-y-1.5">
         {data.map((database: any) => (
           <button
             key={database.id}
