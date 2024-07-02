@@ -1,6 +1,6 @@
-import { Pool } from "pg";
+import { Pool, PoolClient } from "pg";
 import { prisma } from "../prisma";
-import { getTablesSQL } from "../constants/sql";
+import { getTablesAndColumnsQuery } from "../constants/sql";
 import { createCipheriv, createDecipheriv, randomBytes } from "crypto";
 
 export class DatabaseService {
@@ -45,29 +45,56 @@ export class DatabaseService {
     return decrypted.toString();
   }
 
-  private async createPostgresClient(connectionString: string) {
-    const pool = new Pool({ connectionString: connectionString });
-
+  private async withPostgresClient<T>(
+    connectionString: string,
+    operation: (client: PoolClient) => Promise<T>
+  ): Promise<T> {
+    const pool = new Pool({ connectionString });
+    const client = await pool.connect();
     try {
-      return await pool.connect();
-    } catch {
-      throw new Error("Failed to Connect to Database");
+      return await operation(client);
+    } finally {
+      client.release();
     }
   }
 
-  async testConnection(type: string, connectionString: string) {
+  async testConnection(type: string, connectionString: string): Promise<void> {
     if (type === "postgres") {
-      const client = await this.createPostgresClient(connectionString);
-      client.release();
+      await this.withPostgresClient(connectionString, async () => {});
     }
   }
 
   async getTables(type: string, connectionString: string) {
     if (type === "postgres") {
-      const client = await this.createPostgresClient(connectionString);
-      const schema = await client.query(getTablesSQL);
-      client.release();
-      return schema.rows.map((row) => row.table_name);
+      return await this.withPostgresClient(connectionString, async (client) => {
+        const schema = await client.query(getTablesAndColumnsQuery);
+
+        const tableMap = new Map<string, string[]>();
+
+        schema.rows.forEach(
+          ({
+            table_name,
+            column_name,
+          }: {
+            table_name: string;
+            column_name: string;
+          }) => {
+            if (!tableMap.has(table_name)) {
+              tableMap.set(table_name, []);
+            }
+            tableMap.get(table_name)?.push(column_name);
+          }
+        );
+
+        const transformedResponse = Array.from(tableMap.entries()).map(
+          ([tableName, columns]) => ({
+            tableName,
+            columns,
+          })
+        );
+
+        return transformedResponse;
+      });
     }
   }
 

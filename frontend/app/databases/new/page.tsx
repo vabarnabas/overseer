@@ -148,7 +148,7 @@ export default function NewDatabasePage() {
               ))}
             </div>
           </div>
-          <button className=" bg-black px-4 py-1.5 rounded-md text-white hover:bg-black/80 flex justify-center">
+          <button className="w-full bg-black px-4 py-1.5 rounded-md text-white hover:bg-black/80 flex justify-center">
             Add Database
           </button>
         </form>

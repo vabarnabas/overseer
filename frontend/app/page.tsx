@@ -15,7 +15,7 @@ export default function Home() {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${url}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      return res.json();
+      return await res.json();
     },
     {
       revalidateOnFocus: false,
@@ -54,16 +54,17 @@ export default function Home() {
       </div>
       <div className="flex flex-col gap-y-1.5">
         {data.map((database: any) => (
-          <button
+          <Link
+            href={`/databases/${database.id}`}
             key={database.id}
             className="flex items-center border px-3 py-2 rounded-lg w-full"
           >
             <ProviderIcon provider={database.provider} />
             <div className="ml-3 text-start">
-              <p className="font-semibold text-lg">{database.name}</p>
-              <p className="text-sm -mt-1.5">{database.type}</p>
+              <p className="font-semibold text-xl">{database.name}</p>
+              <p className="text-sm opacity-60 -mt-1">{database.type}</p>
             </div>
-          </button>
+          </Link>
         ))}
       </div>
     </div>
