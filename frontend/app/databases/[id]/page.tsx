@@ -2,13 +2,19 @@
 import DatabaseTableRow from "@/components/database-table-row/database-table-row";
 import ProviderIcon from "@/components/provider-icon/provider-icon";
 import { useAuth } from "@clerk/nextjs";
+import { Editor } from "@monaco-editor/react";
 import { AnimatePresence } from "framer-motion";
 import { useParams } from "next/navigation";
-import React from "react";
+import React, { useState } from "react";
 import { BiChevronDown } from "react-icons/bi";
+import { BsDiagram2Fill } from "react-icons/bs";
+import { FaDiagramProject } from "react-icons/fa6";
+import { TbSql } from "react-icons/tb";
 import useSWRImmutable from "swr/immutable";
 
 export default function SpecificDatabase() {
+  const [isEditorShown, setIsEditorShown] = useState(false);
+  const [editorContent, setEditorContent] = useState("");
   const { id } = useParams();
   const { getToken } = useAuth();
 
@@ -54,24 +60,56 @@ export default function SpecificDatabase() {
   }
 
   return (
-    <div>
-      <div className="flex items-center w-full">
-        <div className="text-4xl text-primary">
-          <ProviderIcon provider={data.database.provider} />
+    <>
+      <div className="flex items-center justify-between w-full">
+        <div className="flex gap-x-3 items-center">
+          <div className="text-4xl text-primary">
+            <ProviderIcon provider={data.database.provider} />
+          </div>
+          <div className="text-start">
+            <p className="font-semibold text-2xl">{data.database.name}</p>
+            <p className="text-sm opacity-60 -mt-1">{data.database.type}</p>
+          </div>
         </div>
-        <div className="ml-3 text-start">
-          <p className="font-semibold text-2xl">{data.database.name}</p>
-          <p className="text-sm opacity-60 -mt-1">{data.database.type}</p>
-        </div>
+        <button
+          onClick={() =>
+            setIsEditorShown((prevIsEditorShown) => !prevIsEditorShown)
+          }
+          className="text-3xl hover:text-primary"
+        >
+          {isEditorShown ? <FaDiagramProject className="text-xl" /> : <TbSql />}
+        </button>
       </div>
-      <p className="text-2xl font-semibold mt-6 mb-4">Schema</p>
-      <AnimatePresence>
-        <div className="flex flex-col gap-y-1">
-          {data.tables.map((table: any) => (
-            <DatabaseTableRow key={table.tableName} table={table} />
-          ))}
+      {isEditorShown ? (
+        <div className="flex flex-col flex-grow mt-4">
+          <div className="flex justify-between items-center">
+            <p className="text-sm font-medium py-1 border w-max px-6 flex justify-center rounded-t-md">
+              SQL Query
+            </p>
+          </div>
+          <div className="relative flex flex-grow h-full">
+            <Editor
+              className="overflow-hidden flex flex-grow w-full h-full rounded-b-md"
+              defaultLanguage="sql"
+              theme="vs-dark"
+              value={editorContent}
+              onChange={(e) => setEditorContent(e || "")}
+              height={"auto"}
+            />
+          </div>
         </div>
-      </AnimatePresence>
-    </div>
+      ) : (
+        <>
+          <p className="text-2xl font-semibold mt-6 mb-4">Schema</p>
+          <AnimatePresence>
+            <div className="flex flex-col gap-y-1">
+              {data.tables.map((table: any) => (
+                <DatabaseTableRow key={table.tableName} table={table} />
+              ))}
+            </div>
+          </AnimatePresence>
+        </>
+      )}
+    </>
   );
 }
