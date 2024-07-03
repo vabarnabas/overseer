@@ -108,7 +108,7 @@ export default function EditorSection() {
         </div>
       ) : null}
       {internalState === InternalState.QueryResult ? (
-        <div className="flex overflow-x-auto">
+        <div className="flex overflow-x-auto border-x">
           <ObjectTable rows={queryData.rows} fields={queryData.fields} />
         </div>
       ) : null}

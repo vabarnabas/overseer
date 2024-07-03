@@ -11,8 +11,9 @@ import { useRouter } from "next/navigation";
 import React from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { BiLogoPostgresql } from "react-icons/bi";
-import { FaDatabase, FaFly } from "react-icons/fa6";
+import { FaAws, FaDatabase, FaFly } from "react-icons/fa6";
 import { SiMysql, SiRailway } from "react-icons/si";
+import { VscAzure } from "react-icons/vsc";
 import useSWRMutation from "swr/mutation";
 
 export default function NewDatabasePage() {
@@ -30,6 +31,16 @@ export default function NewDatabasePage() {
       name: "Fly.io",
       value: "fly",
       icon: <FaFly className="text-6xl" />,
+    },
+    {
+      name: "Azure",
+      value: "azure",
+      icon: <VscAzure className="text-6xl" />,
+    },
+    {
+      name: "AWS",
+      value: "aws",
+      icon: <FaAws className="text-6xl" />,
     },
     {
       name: "Other",

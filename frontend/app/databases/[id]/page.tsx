@@ -16,8 +16,7 @@ import useSWRImmutable from "swr/immutable";
 import useSWRMutation from "swr/mutation";
 
 export default function SpecificDatabase() {
-  const [isEditorShown, setIsEditorShown] = useState(false);
-  const [editorContent, setEditorContent] = useState("");
+  const [isEditorShown, setIsEditorShown] = useState(true);
   const { id } = useParams();
   const { getToken } = useAuth();
 
@@ -45,8 +44,6 @@ export default function SpecificDatabase() {
       return { database, tables };
     }
   );
-
-  console.log(isValidating, error, data);
 
   if (isValidating) {
     return (
