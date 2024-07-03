@@ -30,14 +30,16 @@ export default function RootLayout({
         </head>
         <body
           className={clsx(
-            "min-h-screen flex flex-col items-center",
+            "h-screen overflow-hidden flex flex-col items-center",
             inter.className
           )}
         >
-          <Sidebar />
           <Navbar />
-          <div className="w-full pl-[19.5rem] pr-4 pb-4 pt-[5.5rem] md:pr-6 flex-grow flex flex-col">
-            {children}
+          <div className="flex flex-grow w-full h-full overflow-hidden">
+            <Sidebar />
+            <div className="flex-grow w-full h-full flex flex-col p-4">
+              {children}
+            </div>
           </div>
           <Toaster position="top-right" />
         </body>

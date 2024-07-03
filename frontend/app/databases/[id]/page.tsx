@@ -76,29 +76,10 @@ export default function SpecificDatabase() {
             <p className="text-sm opacity-60 -mt-1">{`${data.database.type} / ${data.database.provider}`}</p>
           </div>
         </div>
-        <button
-          onClick={() =>
-            setIsEditorShown((prevIsEditorShown) => !prevIsEditorShown)
-          }
-          className="text-3xl hover:text-primary"
-        >
-          {isEditorShown ? <FaDiagramProject className="text-xl" /> : <TbSql />}
-        </button>
       </div>
-      {isEditorShown ? (
+      <div className="h-full w-full flex flex-grow">
         <EditorSection />
-      ) : (
-        <>
-          <p className="text-2xl font-semibold mt-6 mb-4">Schema</p>
-          <AnimatePresence>
-            <div className="flex flex-col gap-y-1">
-              {data.tables.map((table: any) => (
-                <DatabaseTableRow key={table.tableName} table={table} />
-              ))}
-            </div>
-          </AnimatePresence>
-        </>
-      )}
+      </div>
     </>
   );
 }

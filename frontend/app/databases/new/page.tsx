@@ -1,4 +1,5 @@
 "use client";
+import NeonLogo from "@/components/logo/neon-logo";
 import {
   CreateDatabase,
   createDatabaseSchema,
@@ -41,6 +42,11 @@ export default function NewDatabasePage() {
       name: "AWS",
       value: "aws",
       icon: <FaAws className="text-6xl" />,
+    },
+    {
+      name: "Neon",
+      value: "neon",
+      icon: <NeonLogo className="text-6xl" />,
     },
     {
       name: "Other",
@@ -101,9 +107,9 @@ export default function NewDatabasePage() {
   watch();
 
   return (
-    <div>
+    <div className="h-full w-full overflow-y-auto scrollbar-hide">
       <FormProvider {...form}>
-        <div className="w-full flex items-center justify-between mb-4">
+        <div className="w-full flex items-center justify-between mb-4 ">
           <p className="text-2xl font-semibold">New Database</p>
         </div>
         <form onSubmit={onSubmit} className="flex flex-col gap-y-4">

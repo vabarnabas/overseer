@@ -1,9 +1,11 @@
 import React from "react";
 import { BiLogoPostgresql } from "react-icons/bi";
 import { FaDatabase } from "react-icons/fa";
-import { FaFly } from "react-icons/fa6";
+import { FaAws, FaFly } from "react-icons/fa6";
 import { GrMysql } from "react-icons/gr";
-import { SiMysql, SiRailway } from "react-icons/si";
+import { SiRailway } from "react-icons/si";
+import { VscAzure } from "react-icons/vsc";
+import NeonLogo from "../logo/neon-logo";
 
 interface Props {
   provider: string;
@@ -17,6 +19,12 @@ export default function ProviderIcon({ provider, type }: Props) {
         return <SiRailway scale={50} />;
       case "fly":
         return <FaFly />;
+      case "azure":
+        return <VscAzure />;
+      case "aws":
+        return <FaAws />;
+      case "neon":
+        return <NeonLogo />;
       default:
         return <FaDatabase />;
     }
@@ -36,7 +44,7 @@ export default function ProviderIcon({ provider, type }: Props) {
   return (
     <div className="relative flex justify-center items-center">
       <span>{getTypeIcon()}</span>
-      <span className="absolute bg-white rounded-full text-base p-0.5 -right-2  -bottom-1">
+      <span className="absolute bg-white rounded-md text-base p-0.5 -right-2  -bottom-1">
         {getProviderIcon()}
       </span>
     </div>

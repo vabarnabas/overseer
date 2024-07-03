@@ -7,11 +7,10 @@ import Logo from "../logo/logo";
 
 export default function Navbar() {
   return (
-    <div className="fixed inset-x-0 top-0 h-16 flex items-center justify-between px-4 border-b bg-white z-10">
+    <div className="w-full flex-shrink-0 h-16 flex items-center justify-between px-4 border-b bg-white z-10">
       <Link href={"/"}>
         <div className="flex w-max items-center gap-x-2 text-lg font-medium">
-          <Logo className="text-primary" width={26} height={26} />
-          <p className="">Overseer</p>
+          <Logo className="text-primary" width={32} height={32} />
         </div>
       </Link>
       <SignedOut>

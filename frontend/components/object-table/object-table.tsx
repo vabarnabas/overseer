@@ -6,24 +6,16 @@ interface Props {
 }
 
 export default function ObjectTable({ rows, fields }: Props) {
-  console.log(rows);
-
-  const keys = fields?.map((field) => field.name) || Object.keys(rows);
-
-  if (!rows || (Array.isArray(rows) && rows.length === 0)) {
-    return null;
-  }
-
-  console.log("keys", keys);
+  const keys = fields?.map((field) => field.name) || Object.keys(rows[0] || {});
 
   return (
-    <table className="text-sm w-full">
-      <thead className="border-b sticky top-0">
+    <table className="overflow-auto text-sm">
+      <thead>
         <tr className="">
-          <th className="py-2 border-x px-8 bg-slate-50 h-max">#</th>
+          <th className="py-2 border-x px-8 bg-slate-50 sticky top-0">#</th>
           {keys.map((key, index) => (
             <th
-              className="py-2 border-x px-8 bg-slate-50 w-auto whitespace-nowrap h-max"
+              className="py-2 border-x px-8 bg-slate-50 sticky top-0 min-w-[120px] max-w-[200px] whitespace-nowrap"
               key={index}
             >
               {key}
@@ -32,33 +24,19 @@ export default function ObjectTable({ rows, fields }: Props) {
         </tr>
       </thead>
       <tbody>
-        {Array.isArray(rows) ? (
-          rows.map((item, rowIndex) => (
-            <tr key={rowIndex}>
-              <td className="border py-1 px-3 text-center">{rowIndex}</td>
-              {keys.map((key, colIndex) => (
-                <td
-                  className="border py-0.5 px-3 text-center w-auto whitespace-nowrap"
-                  key={colIndex}
-                >
-                  {item[key]}
-                </td>
-              ))}
-            </tr>
-          ))
-        ) : (
-          <>
-            <td className="border py-1 px-3 text-center">{0}</td>
+        {rows.map((item, rowIndex) => (
+          <tr key={rowIndex}>
+            <td className="border py-1 px-3 text-center">{rowIndex + 1}</td>
             {keys.map((key, colIndex) => (
               <td
-                className="border py-0.5 px-3 text-center w-auto whitespace-nowrap"
+                className="border py-0.5 px-3 text-center whitespace-nowrap select-all"
                 key={colIndex}
               >
-                {rows[key]}
+                {item[key]}
               </td>
             ))}
-          </>
-        )}
+          </tr>
+        ))}
       </tbody>
     </table>
   );

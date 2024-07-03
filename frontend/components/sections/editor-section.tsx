@@ -3,8 +3,7 @@ import { Editor } from "@monaco-editor/react";
 import clsx from "clsx";
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import { FaSave } from "react-icons/fa";
-import { FaFolderOpen, FaPlay } from "react-icons/fa6";
+import { FaSave, FaFolderOpen, FaPlay } from "react-icons/fa";
 import useSWRMutation from "swr/mutation";
 import ObjectTable from "../object-table/object-table";
 import { toast } from "sonner";
@@ -42,8 +41,6 @@ export default function EditorSection() {
     return data;
   });
 
-  console.log(queryData);
-
   useEffect(() => {
     if (!error && queryData) {
       setInternalState(InternalState.QueryResult);
@@ -51,67 +48,45 @@ export default function EditorSection() {
   }, [queryData, error]);
 
   return (
-    <div className="flex flex-col flex-grow mt-6">
-      <div className="flex items-center">
-        <button
-          onClick={() => setInternalState(InternalState.Editor)}
-          className={clsx(
-            "hover:bg-slate-100 text-sm font-medium py-1 border w-max px-6 flex justify-center rounded-t-md",
-            internalState === InternalState.Editor && "bg-slate-100"
-          )}
-        >
-          SQL Query
-        </button>
-        {queryData ? (
-          <button
-            onClick={() => setInternalState(InternalState.QueryResult)}
-            className={clsx(
-              "hover:bg-slate-100 text-sm font-medium py-1 border w-max px-6 flex justify-center rounded-t-md",
-              internalState === InternalState.QueryResult && "bg-slate-100"
-            )}
-          >
-            Query Result
+    <div className="flex flex-col mt-6 w-full flex-grow">
+      <div className="relative flex">
+        <Editor
+          className="overflow-hidden flex w-full rounded-md"
+          defaultLanguage="sql"
+          theme="vs-dark"
+          value={editorContent}
+          onChange={(e) => setEditorContent(e || "")}
+          height={"16rem"}
+          options={{ minimap: { enabled: false } }}
+        />
+        <div className="absolute right-4 px-2 py-2 gap-x-3 rounded-md top-3 bg-white flex items-center justify-center">
+          <button className="text-lg hover:text-primary">
+            <FaFolderOpen />
           </button>
-        ) : null}
+          <button className="text-lg hover:text-primary">
+            <FaSave />
+          </button>
+          <button
+            onClick={() =>
+              toast.promise(trigger(), {
+                loading: "Executing Query...",
+                success: "Query Executed Successfully",
+                error: "Failed to Execute Query",
+              })
+            }
+            className="text-lg hover:text-primary"
+          >
+            <FaPlay />
+          </button>
+        </div>
       </div>
-      {internalState === InternalState.Editor ? (
-        <div className="relative flex flex-grow h-full">
-          <Editor
-            className="overflow-hidden flex flex-grow w-full h-full rounded-b-md"
-            defaultLanguage="sql"
-            theme="vs-dark"
-            value={editorContent}
-            onChange={(e) => setEditorContent(e || "")}
-            height={"auto"}
-            options={{ minimap: { enabled: false } }}
-          />
-          <div className="absolute right-4 px-2 py-2 gap-x-3 rounded-md top-3 bg-white flex items-center justify-center">
-            <button className="text-lg hover:text-primary">
-              <FaFolderOpen />
-            </button>
-            <button className="text-lg hover:text-primary">
-              <FaSave />
-            </button>
-            <button
-              onClick={() =>
-                toast.promise(trigger(), {
-                  loading: "Executing Query...",
-                  success: "Query Executed Successfully",
-                  error: "Failed to Execute Query",
-                })
-              }
-              className="text-lg hover:text-primary"
-            >
-              <FaPlay />
-            </button>
-          </div>
-        </div>
-      ) : null}
-      {internalState === InternalState.QueryResult ? (
-        <div className="flex overflow-x-auto border-x">
-          <ObjectTable rows={queryData.rows} fields={queryData.fields} />
-        </div>
-      ) : null}
+      <div className="relative border rounded-md flex mt-2 flex-1 overflow-hidden">
+        <span className="absolute overflow-auto h-full w-full">
+          {queryData ? (
+            <ObjectTable rows={queryData.rows} fields={queryData.fields} />
+          ) : null}
+        </span>
+      </div>
     </div>
   );
 }

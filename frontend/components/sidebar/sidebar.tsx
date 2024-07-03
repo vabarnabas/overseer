@@ -9,7 +9,7 @@ export default function Sidebar() {
   const pathName = usePathname();
 
   return (
-    <div className="w-72 fixed bottom-0 top-16 pt-5 left-0 flex flex-col items-center px-2 border-r">
+    <div className="w-72 flex-shrink-0 pt-5 flex flex-col items-center px-2 border-r">
       <Link
         href={"/"}
         className="py-2 px-2 w-full flex items-center gap-x-3 hover:bg-slate-100 rounded-md"

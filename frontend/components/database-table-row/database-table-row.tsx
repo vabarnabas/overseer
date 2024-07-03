@@ -22,7 +22,7 @@ export default function DatabaseTableRow({ table, small }: Props) {
       )}
     >
       <div className="flex items-center justify-between w-full">
-        <p className={clsx("font-semibold", small ? "" : "text-lg")}>
+        <p className={clsx("font-semibold", small ? "text-sm" : "text-lg")}>
           {table.tableName}
         </p>
         {isOpen ? (
@@ -45,7 +45,7 @@ export default function DatabaseTableRow({ table, small }: Props) {
               <div
                 key={`${table.tableName}_${column}`}
                 className={clsx(
-                  "w-full flex items-center justify-between",
+                  "w-full flex items-start gap-x-3 justify-between",
                   small && "text-sm"
                 )}
               >
