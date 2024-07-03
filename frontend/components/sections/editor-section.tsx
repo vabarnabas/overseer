@@ -22,30 +22,33 @@ export default function EditorSection() {
   const { getToken } = useAuth();
   const { id } = useParams();
 
-  const { trigger, data: queryData } = useSWRMutation(
-    `/databases/${id}/query`,
-    async (url) => {
-      const token = await getToken();
+  const {
+    trigger,
+    data: queryData,
+    error,
+  } = useSWRMutation(`/databases/${id}/query`, async (url) => {
+    const token = await getToken();
 
-      if (!editorContent) return;
+    if (!editorContent) return;
 
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${url}`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ query: editorContent }),
-      });
-      const data = await res.json();
-      return data;
-    }
-  );
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${url}`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ query: editorContent }),
+    });
+    const data = await res.json();
+    return data;
+  });
+
+  console.log(queryData);
 
   useEffect(() => {
-    if (queryData) {
+    if (!error && queryData) {
       setInternalState(InternalState.QueryResult);
     }
-  }, [queryData]);
+  }, [queryData, error]);
 
   return (
     <div className="flex flex-col flex-grow mt-6">
@@ -80,6 +83,7 @@ export default function EditorSection() {
             value={editorContent}
             onChange={(e) => setEditorContent(e || "")}
             height={"auto"}
+            options={{ minimap: { enabled: false } }}
           />
           <div className="absolute right-4 px-2 py-2 gap-x-3 rounded-md top-3 bg-white flex items-center justify-center">
             <button className="text-lg hover:text-primary">

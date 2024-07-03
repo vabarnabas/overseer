@@ -46,6 +46,8 @@ export default function SpecificDatabase() {
     }
   );
 
+  console.log(isValidating, error, data);
+
   if (isValidating) {
     return (
       <div className="flex flex-grow justify-center items-center">
@@ -65,13 +67,16 @@ export default function SpecificDatabase() {
   return (
     <>
       <div className="flex items-center justify-between w-full">
-        <div className="flex gap-x-3 items-center">
+        <div className="flex gap-x-5 items-center">
           <div className="text-4xl text-primary">
-            <ProviderIcon provider={data.database.provider} />
+            <ProviderIcon
+              provider={data.database.provider}
+              type={data.database.type}
+            />
           </div>
           <div className="text-start">
             <p className="font-semibold text-2xl">{data.database.name}</p>
-            <p className="text-sm opacity-60 -mt-1">{data.database.type}</p>
+            <p className="text-sm opacity-60 -mt-1">{`${data.database.type} / ${data.database.provider}`}</p>
           </div>
         </div>
         <button

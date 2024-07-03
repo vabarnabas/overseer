@@ -12,7 +12,7 @@ import React from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { BiLogoPostgresql } from "react-icons/bi";
 import { FaDatabase, FaFly } from "react-icons/fa6";
-import { SiRailway } from "react-icons/si";
+import { SiMysql, SiRailway } from "react-icons/si";
 import useSWRMutation from "swr/mutation";
 
 export default function NewDatabasePage() {
@@ -43,6 +43,11 @@ export default function NewDatabasePage() {
       name: "PostgreSQL",
       value: "postgres",
       icon: <BiLogoPostgresql className="text-6xl" />,
+    },
+    {
+      name: "MySQL",
+      value: "mysql",
+      icon: <SiMysql className="text-6xl" />,
     },
   ];
 

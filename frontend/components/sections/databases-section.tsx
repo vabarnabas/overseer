@@ -49,14 +49,14 @@ export default function DatabasesSection() {
           <Link
             href={`/databases/${database.id}`}
             key={database.id}
-            className="flex items-center border px-3 py-2 rounded-lg w-full hover:bg-slate-100"
+            className="flex items-center border px-3 py-2 gap-x-5 rounded-lg w-full hover:bg-slate-100"
           >
             <div className="text-3xl text-primary">
-              <ProviderIcon provider={database.provider} />
+              <ProviderIcon provider={database.provider} type={database.type} />
             </div>
-            <div className="ml-3 text-start">
+            <div className="text-start">
               <p className="font-medium text-lg">{database.name}</p>
-              <p className="text-sm opacity-60 -mt-1">{database.type}</p>
+              <p className="text-sm opacity-60 -mt-1">{`${database.type} / ${database.provider}`}</p>
             </div>
           </Link>
         ))}

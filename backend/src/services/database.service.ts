@@ -1,7 +1,11 @@
 import { Pool, PoolClient } from "pg";
 import { prisma } from "../prisma";
-import { getTablesAndColumnsQuery } from "../constants/sql";
+import {
+  getTablesAndColumnsQueryMySQL,
+  getTablesAndColumnsQueryPostgreSQL,
+} from "../constants/sql";
 import { createCipheriv, createDecipheriv, randomBytes } from "crypto";
+import mysql, { PoolConnection } from "mysql2/promise";
 
 export class DatabaseService {
   encrypt(text: string): string {
@@ -55,12 +59,30 @@ export class DatabaseService {
       return await operation(client);
     } finally {
       client.release();
+      pool.end();
+    }
+  }
+
+  private async withMySQLClient<T>(
+    connectionString: string,
+    operation: (connection: PoolConnection) => Promise<T>
+  ): Promise<T> {
+    const pool = mysql.createPool(connectionString);
+    const client = await pool.getConnection();
+
+    try {
+      return await operation(client);
+    } finally {
+      client.release();
+      pool.end();
     }
   }
 
   async testConnection(type: string, connectionString: string): Promise<void> {
     if (type === "postgres") {
       await this.withPostgresClient(connectionString, async () => {});
+    } else if (type === "mysql") {
+      await this.withMySQLClient(connectionString, async () => {});
     }
   }
 
@@ -69,13 +91,18 @@ export class DatabaseService {
       return await this.withPostgresClient(connectionString, async (client) => {
         return await client.query(query);
       });
+    } else if (type === "mysql") {
+      return await this.withMySQLClient(connectionString, async (client) => {
+        const [rows, fields] = await client.query(query);
+        return { rows, fields };
+      });
     }
   }
 
   async getTables(type: string, connectionString: string) {
     if (type === "postgres") {
       return await this.withPostgresClient(connectionString, async (client) => {
-        const schema = await client.query(getTablesAndColumnsQuery);
+        const schema = await client.query(getTablesAndColumnsQueryPostgreSQL);
 
         const tableMap = new Map<string, { name: string; type: string }[]>();
 
@@ -88,6 +115,42 @@ export class DatabaseService {
             table_name: string;
             column_name: string;
             data_type: string;
+          }) => {
+            if (!tableMap.has(table_name)) {
+              tableMap.set(table_name, []);
+            }
+            tableMap
+              .get(table_name)
+              ?.push({ name: column_name, type: data_type });
+          }
+        );
+
+        const transformedResponse = Array.from(tableMap.entries()).map(
+          ([tableName, columns]) => ({
+            tableName,
+            columns,
+          })
+        );
+
+        return transformedResponse;
+      });
+    } else if (type === "mysql") {
+      return await this.withMySQLClient(connectionString, async (client) => {
+        const [result] = await client.query(getTablesAndColumnsQueryMySQL);
+
+        console.log(result);
+
+        const tableMap = new Map<string, { name: string; type: string }[]>();
+
+        (result as any[]).forEach(
+          ({
+            TABLE_NAME: table_name,
+            COLUMN_NAME: column_name,
+            DATA_TYPE: data_type,
+          }: {
+            TABLE_NAME: string;
+            COLUMN_NAME: string;
+            DATA_TYPE: string;
           }) => {
             if (!tableMap.has(table_name)) {
               tableMap.set(table_name, []);
