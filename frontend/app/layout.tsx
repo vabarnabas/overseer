@@ -5,6 +5,7 @@ import Sidebar from "@/components/sidebar/sidebar";
 import clsx from "clsx";
 import Navbar from "@/components/navbar/navbar";
 import { ClerkProvider } from "@clerk/nextjs";
+import { Toaster } from "sonner";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -38,6 +39,7 @@ export default function RootLayout({
           <div className="w-full pl-[19.5rem] pr-4 pb-4 pt-[5.5rem] md:pr-6 flex-grow flex flex-col">
             {children}
           </div>
+          <Toaster position="top-right" />
         </body>
       </html>
     </ClerkProvider>

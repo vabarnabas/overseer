@@ -52,6 +52,38 @@ DatabaseController.get("/:id/tables", async (c) => {
   return c.json(tables);
 });
 
+DatabaseController.post("/:id/query", async (c) => {
+  const { id } = c.req.param();
+  const auth = getAuth(c);
+  const { query } = await c.req.json();
+
+  if (!query) {
+    return c.json(BadRequestError, 400);
+  }
+
+  if (!auth?.userId) {
+    return c.json(UnauthorizedError, 401);
+  }
+
+  const database = await databaseService.findSpecific(id);
+
+  if (!database) {
+    return c.json({ error: "Database Not Found" }, 404);
+  }
+
+  const decryptedConnectionString = databaseService.decrypt(
+    database.connectionString
+  );
+
+  const result = await databaseService.runQuery(
+    database.type,
+    decryptedConnectionString,
+    query
+  );
+
+  return c.json(result);
+});
+
 DatabaseController.post("/", async (c) => {
   const auth = getAuth(c);
 
@@ -61,7 +93,9 @@ DatabaseController.post("/", async (c) => {
 
   const dto = await c.req.json();
 
-  console.log(dto);
+  if (!dto) {
+    return c.json(BadRequestError, 400);
+  }
 
   try {
     dto.connectionString = databaseService.encrypt(dto.connectionString);

@@ -64,6 +64,14 @@ export class DatabaseService {
     }
   }
 
+  async runQuery(type: string, connectionString: string, query: string) {
+    if (type === "postgres") {
+      return await this.withPostgresClient(connectionString, async (client) => {
+        return await client.query(query);
+      });
+    }
+  }
+
   async getTables(type: string, connectionString: string) {
     if (type === "postgres") {
       return await this.withPostgresClient(connectionString, async (client) => {

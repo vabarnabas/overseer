@@ -1,6 +1,7 @@
 "use client";
 import DatabaseTableRow from "@/components/database-table-row/database-table-row";
 import ProviderIcon from "@/components/provider-icon/provider-icon";
+import EditorSection from "@/components/sections/editor-section";
 import { useAuth } from "@clerk/nextjs";
 import { Editor } from "@monaco-editor/react";
 import { AnimatePresence } from "framer-motion";
@@ -8,9 +9,11 @@ import { useParams } from "next/navigation";
 import React, { useState } from "react";
 import { BiChevronDown } from "react-icons/bi";
 import { BsDiagram2Fill } from "react-icons/bs";
-import { FaDiagramProject } from "react-icons/fa6";
+import { FaSave } from "react-icons/fa";
+import { FaDiagramProject, FaFolderOpen, FaPlay } from "react-icons/fa6";
 import { TbSql } from "react-icons/tb";
 import useSWRImmutable from "swr/immutable";
+import useSWRMutation from "swr/mutation";
 
 export default function SpecificDatabase() {
   const [isEditorShown, setIsEditorShown] = useState(false);
@@ -81,23 +84,7 @@ export default function SpecificDatabase() {
         </button>
       </div>
       {isEditorShown ? (
-        <div className="flex flex-col flex-grow mt-4">
-          <div className="flex justify-between items-center">
-            <p className="text-sm font-medium py-1 border w-max px-6 flex justify-center rounded-t-md">
-              SQL Query
-            </p>
-          </div>
-          <div className="relative flex flex-grow h-full">
-            <Editor
-              className="overflow-hidden flex flex-grow w-full h-full rounded-b-md"
-              defaultLanguage="sql"
-              theme="vs-dark"
-              value={editorContent}
-              onChange={(e) => setEditorContent(e || "")}
-              height={"auto"}
-            />
-          </div>
-        </div>
+        <EditorSection />
       ) : (
         <>
           <p className="text-2xl font-semibold mt-6 mb-4">Schema</p>
