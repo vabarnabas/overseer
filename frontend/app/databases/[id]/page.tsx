@@ -62,8 +62,8 @@ export default function SpecificDatabase() {
   }
 
   return (
-    <>
-      <div className="flex items-center justify-between w-full p-4">
+    <div className="p-4 flex flex-grow flex-col">
+      <div className="flex items-center justify-between w-full">
         <div className="flex gap-x-5 items-center">
           <div className="text-4xl text-primary">
             <ProviderIcon
@@ -80,6 +80,6 @@ export default function SpecificDatabase() {
       <div className="h-full w-full flex flex-grow">
         <EditorSection type={data.database.type} />
       </div>
-    </>
+    </div>
   );
 }

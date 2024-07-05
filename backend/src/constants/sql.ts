@@ -8,3 +8,10 @@ export const getTablesAndColumnsQueryMySQL = `SELECT table_schema, table_name, c
 FROM information_schema.columns
 WHERE table_schema = DATABASE();
 `;
+
+export const getTablesAndColumnsQueryMsSQL = `SELECT
+    TABLE_NAME,
+    COLUMN_NAME,
+    DATA_TYPE
+FROM
+    INFORMATION_SCHEMA.COLUMNS;`;

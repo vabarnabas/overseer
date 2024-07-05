@@ -46,15 +46,15 @@ export default function EditorSection({ type }: Props) {
 
   return (
     <div className="flex flex-col mt-6 w-full flex-grow">
-      <div className="relative flex">
+      <div className="relative ">
         <Editor
-          className="overflow-hidden flex w-full rounded-md"
+          className="overflow-hidden flex w-full rounded-md min-w-0 flex-1 absolute h-full"
           defaultLanguage="sql"
           theme="vs-dark"
           value={editorContent}
           onChange={(e) => setEditorContent(e || "")}
           height={"18rem"}
-          options={{ minimap: { enabled: false } }}
+          options={{ minimap: { enabled: false }, automaticLayout: true }}
           beforeMount={(monaco: Monaco) => {
             monaco.editor.addEditorAction({
               id: "runSqlQuery",
@@ -66,24 +66,21 @@ export default function EditorSection({ type }: Props) {
             });
           }}
         />
-        <div className="absolute right-4 px-2 py-2 gap-x-2 rounded-md top-3 bg-white flex items-center justify-center">
-          <button className="hover:text-primary">
-            <FaFolderOpen />
-          </button>
-          <button className="hover:text-primary">
-            <FaSave />
-          </button>
-          <button
-            onClick={() => {
-              runQuery();
-            }}
-            className="hover:text-primary text-sm"
-          >
-            <FaPlay />
-          </button>
-        </div>
       </div>
-      <div className="relative border rounded-md flex mt-2 flex-1 overflow-hidden">
+      <div className="px-2 py-2 gap-x-4 rounded-md top-3 bg-white flex items-center justify-end">
+        <button className="hover:text-primary flex items-center gap-x-1.5">
+          <FaSave /> Save Query
+        </button>
+        <button
+          onClick={() => {
+            runQuery();
+          }}
+          className="hover:text-primary flex items-center gap-x-1.5"
+        >
+          <FaPlay className="text-sm" /> Run Query
+        </button>
+      </div>
+      <div className="relative border rounded-md flex flex-1 overflow-hidden">
         <span className="absolute overflow-auto h-full w-full">
           {queryData ? (
             <ObjectTable rows={queryData.rows} fields={queryData.fields} />

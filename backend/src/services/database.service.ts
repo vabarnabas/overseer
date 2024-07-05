@@ -1,11 +1,13 @@
 import { Pool, PoolClient } from "pg";
 import { prisma } from "../prisma";
 import {
+  getTablesAndColumnsQueryMsSQL,
   getTablesAndColumnsQueryMySQL,
   getTablesAndColumnsQueryPostgreSQL,
 } from "../constants/sql";
 import { createCipheriv, createDecipheriv, randomBytes } from "crypto";
 import mysql, { PoolConnection } from "mysql2/promise";
+import sql from "mssql";
 
 export class DatabaseService {
   encrypt(text: string): string {
@@ -77,6 +79,18 @@ export class DatabaseService {
     }
   }
 
+  private async withMsSQLClient<T>(
+    connectionString: string,
+    operation: (connection: sql.ConnectionPool) => Promise<T>
+  ): Promise<T> {
+    const pool = await sql.connect(connectionString);
+    try {
+      return await operation(pool);
+    } finally {
+      pool.close();
+    }
+  }
+
   async testConnection(type: string, connectionString: string): Promise<void> {
     if (type === "postgres") {
       const pool = new Pool({ connectionString });
@@ -90,6 +104,10 @@ export class DatabaseService {
       await client.query("SELECT 1");
       client.release();
       pool.end();
+    } else if (type === "mssql") {
+      const pool = await sql.connect(connectionString);
+      await pool.query("SELECT 1");
+      pool.close();
     }
   }
 
@@ -102,6 +120,12 @@ export class DatabaseService {
       return await this.withMySQLClient(connectionString, async (client) => {
         const [rows, fields] = await client.query(query);
         return { rows, fields };
+      });
+    } else if (type === "mssql") {
+      return await this.withMsSQLClient(connectionString, async (pool) => {
+        const result = await pool.query(query);
+        console.log(result);
+        return { rows: result.recordset };
       });
     }
   }
@@ -145,11 +169,45 @@ export class DatabaseService {
       return await this.withMySQLClient(connectionString, async (client) => {
         const [result] = await client.query(getTablesAndColumnsQueryMySQL);
 
+        const tableMap = new Map<string, { name: string; type: string }[]>();
+
+        (result as any[]).forEach(
+          ({
+            TABLE_NAME: table_name,
+            COLUMN_NAME: column_name,
+            DATA_TYPE: data_type,
+          }: {
+            TABLE_NAME: string;
+            COLUMN_NAME: string;
+            DATA_TYPE: string;
+          }) => {
+            if (!tableMap.has(table_name)) {
+              tableMap.set(table_name, []);
+            }
+            tableMap
+              .get(table_name)
+              ?.push({ name: column_name, type: data_type });
+          }
+        );
+
+        const transformedResponse = Array.from(tableMap.entries()).map(
+          ([tableName, columns]) => ({
+            tableName,
+            columns,
+          })
+        );
+
+        return transformedResponse;
+      });
+    } else if (type === "mssql") {
+      return await this.withMsSQLClient(connectionString, async (client) => {
+        const result = await client.query(getTablesAndColumnsQueryMsSQL);
+
         console.log(result);
 
         const tableMap = new Map<string, { name: string; type: string }[]>();
 
-        (result as any[]).forEach(
+        result.recordset.forEach(
           ({
             TABLE_NAME: table_name,
             COLUMN_NAME: column_name,

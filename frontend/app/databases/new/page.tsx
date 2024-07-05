@@ -13,7 +13,7 @@ import React from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { BiLogoPostgresql } from "react-icons/bi";
 import { FaAws, FaDatabase, FaFly } from "react-icons/fa6";
-import { SiMysql, SiRailway } from "react-icons/si";
+import { SiMicrosoftsqlserver, SiMysql, SiRailway } from "react-icons/si";
 import { VscAzure } from "react-icons/vsc";
 import { toast } from "sonner";
 import useSWRMutation from "swr/mutation";
@@ -66,6 +66,11 @@ export default function NewDatabasePage() {
       name: "MySQL",
       value: "mysql",
       icon: <SiMysql className="text-6xl" />,
+    },
+    {
+      name: "MsSQL",
+      value: "mssql",
+      icon: <SiMicrosoftsqlserver className="text-6xl" />,
     },
   ];
 

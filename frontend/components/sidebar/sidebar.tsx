@@ -9,19 +9,21 @@ export default function Sidebar() {
   const pathName = usePathname();
 
   return (
-    <div className="w-72 flex-shrink-0 pt-5 flex flex-col items-center px-2 border-r">
-      <Link
-        href={"/"}
-        className="py-2 px-2 w-full flex items-center gap-x-3 hover:bg-slate-100 rounded-md"
-      >
-        <FaDatabase />
-        Databases
-      </Link>
+    <>
+      <div className="w-64 flex-shrink-0 pt-5 flex flex-col items-center px-2 border-r">
+        <Link
+          href={"/"}
+          className="py-2 px-2 w-full flex items-center gap-x-3 hover:bg-slate-100 rounded-md"
+        >
+          <FaDatabase />
+          Databases
+        </Link>
+      </div>
       {pathName.match(
         /^\/databases\/[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[4][0-9a-fA-F]{3}-[89ABab][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$/
       ) ? (
         <SidebarSchema />
       ) : null}
-    </div>
+    </>
   );
 }

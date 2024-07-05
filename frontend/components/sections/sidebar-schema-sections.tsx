@@ -36,7 +36,7 @@ export default function SidebarSchema() {
 
   if (isValidating) {
     return (
-      <div className="flex flex-grow justify-center items-center">
+      <div className="w-72 flex flex-grow flex-shrink-0 justify-center items-center border-r">
         Loading...
       </div>
     );
@@ -44,17 +44,16 @@ export default function SidebarSchema() {
 
   if (error || !data) {
     return (
-      <div className="flex flex-grow justify-center items-center">
+      <div className="w-72 flex flex-grow flex-shrink-0 text-center justify-center items-center border-r">
         {`We couldn't fetch your databases. Please try again later.`}
       </div>
     );
   }
 
   return (
-    <div className="w-full px-2 overflow-y-auto pb-4 scrollbar-hide">
-      <p className="text-xl font-semibold mt-2 mb-2">Schema</p>
+    <div className="w-72 flex-shrink-0 pt-5 pb-4 flex flex-col items-start px-2 border-r overflow-y-auto scrollbar-hide">
       <AnimatePresence>
-        <div className="flex flex-col gap-y-1">
+        <div className="flex flex-col gap-y-1 w-full">
           {data.tables.map((table: any) => (
             <DatabaseTableRow small key={table.tableName} table={table} />
           ))}

@@ -3,7 +3,7 @@ import { BiLogoPostgresql } from "react-icons/bi";
 import { FaDatabase } from "react-icons/fa";
 import { FaAws, FaFly } from "react-icons/fa6";
 import { GrMysql } from "react-icons/gr";
-import { SiRailway } from "react-icons/si";
+import { SiMicrosoftsqlserver, SiRailway } from "react-icons/si";
 import { VscAzure } from "react-icons/vsc";
 import NeonLogo from "../logo/neon-logo";
 
@@ -36,6 +36,8 @@ export default function ProviderIcon({ provider, type }: Props) {
         return <BiLogoPostgresql />;
       case "mysql":
         return <GrMysql />;
+      case "mssql":
+        return <SiMicrosoftsqlserver />;
       default:
         return <FaDatabase />;
     }
@@ -44,7 +46,7 @@ export default function ProviderIcon({ provider, type }: Props) {
   return (
     <div className="relative flex justify-center items-center">
       <span>{getTypeIcon()}</span>
-      <span className="absolute bg-white rounded-md text-base p-0.5 -right-2  -bottom-1">
+      <span className="absolute bg-white/70 backdrop-blur-md rounded-md text-base p-0.5 -right-2  -bottom-1">
         {getProviderIcon()}
       </span>
     </div>
