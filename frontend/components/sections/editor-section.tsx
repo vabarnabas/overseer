@@ -82,7 +82,7 @@ export default function EditorSection({ type }: Props) {
       </div>
       <div className="relative border rounded-md flex flex-1 overflow-hidden">
         <span className="absolute overflow-auto h-full w-full">
-          {queryData ? (
+          {queryData && queryData.rows ? (
             <ObjectTable rows={queryData.rows} fields={queryData.fields} />
           ) : null}
         </span>
