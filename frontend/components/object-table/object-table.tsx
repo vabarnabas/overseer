@@ -9,7 +9,7 @@ export default function ObjectTable({ rows, fields }: Props) {
   const keys = fields?.map((field) => field.name) || Object.keys(rows[0] || {});
 
   return (
-    <table className="overflow-auto text-sm">
+    <table className="overflow-auto text-sm w-full">
       <thead>
         <tr className="">
           <th className="py-2 border-x px-8 bg-slate-50 sticky top-0">#</th>

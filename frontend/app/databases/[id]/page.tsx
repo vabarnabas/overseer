@@ -78,7 +78,7 @@ export default function SpecificDatabase() {
         </div>
       </div>
       <div className="h-full w-full flex flex-grow">
-        <EditorSection />
+        <EditorSection type={data.database.type} />
       </div>
     </>
   );

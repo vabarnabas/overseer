@@ -405,6 +405,18 @@ ansi-styles@^6.1.0:
   resolved "https://registry.yarnpkg.com/ansi-styles/-/ansi-styles-6.2.1.tgz#0e62320cf99c21afff3b3012192546aacbfb05c5"
   integrity sha512-bN798gFfQX+viw3R7yrGWRqnrN2oRkEkUjjl4JNn4E8GxxbjtG3FbrEIIY3l8/hrwUwIeCZvi4QuOTP4MErVug==
 
+antlr4-c3@3.3.7:
+  version "3.3.7"
+  resolved "https://registry.yarnpkg.com/antlr4-c3/-/antlr4-c3-3.3.7.tgz#f459fd3cfddfa8811a1f944bd7567df455f8ad27"
+  integrity sha512-F3ndE38wwA6z6AjUbL3heSdEGl4TxulGDPf9xB0/IY4dbRHWBh6XNaqFwur8vHKQk9FS5yNABHeg2wqlqIYO0w==
+  dependencies:
+    antlr4ng "2.0.11"
+
+antlr4ng@2.0.11:
+  version "2.0.11"
+  resolved "https://registry.yarnpkg.com/antlr4ng/-/antlr4ng-2.0.11.tgz#daa000ee6a50fa90d5391d53de2579c6e1d80211"
+  integrity sha512-9jM91VVtHSqHkAHQsXHaoaiewFETMvUTI1/tXvwTiFw4f7zke3IGlwEyoKN9NS0FqIwDKFvUNW2e1cKPniTkVQ==
+
 any-promise@^1.0.0:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/any-promise/-/any-promise-1.3.0.tgz#abc6afeedcea52e809cdc0376aed3ce39635d17f"
@@ -848,6 +860,14 @@ dot-case@^3.0.4:
   dependencies:
     no-case "^3.0.4"
     tslib "^2.0.3"
+
+dt-sql-parser@4.0.2, dt-sql-parser@^4.0.2:
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/dt-sql-parser/-/dt-sql-parser-4.0.2.tgz#95bc937db5e021250c61e74de90bf4af40bedb30"
+  integrity sha512-8D/kfYLW+wgz7Cwf5K+OCtex7QHiCyIuI18pw0a5vjSXRKCpfQqNQeG7tU5vp4D0RQEZJiMBuKJPBYwoqWxoAA==
+  dependencies:
+    antlr4-c3 "3.3.7"
+    antlr4ng "2.0.11"
 
 eastasianwidth@^0.2.0:
   version "0.2.0"
@@ -1952,6 +1972,18 @@ minimist@^1.2.0, minimist@^1.2.6:
   version "7.1.2"
   resolved "https://registry.yarnpkg.com/minipass/-/minipass-7.1.2.tgz#93a9626ce5e5e66bd4db86849e7515e92340a707"
   integrity sha512-qOOzS1cBTWYF4BH8fVePDBOO9iptMnGUEZwNc/cMWnTV2nVLZ7VoNWEPHkYczZA0pdoA7dl6e7FL659nX9S2aw==
+
+monaco-editor@^0.50.0:
+  version "0.50.0"
+  resolved "https://registry.yarnpkg.com/monaco-editor/-/monaco-editor-0.50.0.tgz#44e62b124c8aed224e1d310bbbe6ffd6d5122413"
+  integrity sha512-8CclLCmrRRh+sul7C08BmPBP3P8wVWfBHomsTcndxg5NRCEPfu/mc2AGU8k37ajjDVXcXFc12ORAMUkmk+lkFA==
+
+monaco-sql-languages@^0.12.2:
+  version "0.12.2"
+  resolved "https://registry.yarnpkg.com/monaco-sql-languages/-/monaco-sql-languages-0.12.2.tgz#34413a0ff9978e9720b871d2c54942557f66ef17"
+  integrity sha512-FNo/9FLF9JqYmdSBjQtnCCxg+Bo9hGCRDIatEX+0XUB6zvZSis7JJX7yq64kENqL7KwmX4N2ILkhbBxX5F9wyw==
+  dependencies:
+    dt-sql-parser "4.0.2"
 
 ms@2.1.2:
   version "2.1.2"
