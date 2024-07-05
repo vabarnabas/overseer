@@ -69,7 +69,6 @@ export class DatabaseService {
   ): Promise<T> {
     const pool = mysql.createPool(connectionString);
     const client = await pool.getConnection();
-
     try {
       return await operation(client);
     } finally {
@@ -80,9 +79,17 @@ export class DatabaseService {
 
   async testConnection(type: string, connectionString: string): Promise<void> {
     if (type === "postgres") {
-      await this.withPostgresClient(connectionString, async () => {});
+      const pool = new Pool({ connectionString });
+      const client = await pool.connect();
+      await client.query("SELECT version();");
+      client.release();
+      pool.end();
     } else if (type === "mysql") {
-      await this.withMySQLClient(connectionString, async () => {});
+      const pool = mysql.createPool(connectionString);
+      const client = await pool.getConnection();
+      await client.query("SELECT 1");
+      client.release();
+      pool.end();
     }
   }
 

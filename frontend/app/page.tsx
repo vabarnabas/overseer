@@ -8,7 +8,7 @@ import useSWR from "swr";
 
 export default function Home() {
   return (
-    <div className="w-full flex flex-col flex-grow">
+    <div className="w-full flex flex-col flex-grow p-4">
       <div className="w-full flex items-center justify-between mb-4">
         <p className="text-2xl font-semibold">My Databases</p>
         <Link

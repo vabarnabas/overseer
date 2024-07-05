@@ -15,6 +15,7 @@ import { BiLogoPostgresql } from "react-icons/bi";
 import { FaAws, FaDatabase, FaFly } from "react-icons/fa6";
 import { SiMysql, SiRailway } from "react-icons/si";
 import { VscAzure } from "react-icons/vsc";
+import { toast } from "sonner";
 import useSWRMutation from "swr/mutation";
 
 export default function NewDatabasePage() {
@@ -89,16 +90,36 @@ export default function NewDatabasePage() {
     async (url, { arg: formValues }: { arg: CreateDatabase }) => {
       const token = await getToken();
 
-      try {
-        await fetch(`${process.env.NEXT_PUBLIC_API_URL}${url}`, {
-          method: "POST",
-          body: JSON.stringify({ ...formValues, userId: user!.id }),
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-      } catch {}
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL}${url}`, {
+        method: "POST",
+        body: JSON.stringify({ ...formValues, userId: user!.id }),
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       router.push("/");
+    }
+  );
+
+  const { trigger: triggerTest } = useSWRMutation(
+    "/databases/test",
+    async (
+      url,
+      { arg }: { arg: Pick<CreateDatabase, "type" | "connectionString"> }
+    ) => {
+      const token = await getToken();
+
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${url}`, {
+        method: "POST",
+        body: JSON.stringify(arg),
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to Test Connection");
+      }
     }
   );
 
@@ -107,7 +128,7 @@ export default function NewDatabasePage() {
   watch();
 
   return (
-    <div className="h-full w-full overflow-y-auto scrollbar-hide">
+    <div className="overflow-y-auto scrollbar-hide p-4">
       <FormProvider {...form}>
         <div className="w-full flex items-center justify-between mb-4 ">
           <p className="text-2xl font-semibold">New Database</p>
@@ -124,12 +145,31 @@ export default function NewDatabasePage() {
           </div>
           <div className="">
             <p className="text-sm font-medium mb-1">Connection String</p>
-            <input
-              {...register("connectionString")}
-              placeholder="e.g. postgresql://username:password@host:port"
-              type="text"
-              className="w-full border rounded-lg px-4 py-1.5"
-            />
+            <div className="relative flex items-center">
+              <input
+                {...register("connectionString")}
+                placeholder="e.g. postgresql://username:password@host:port"
+                type="text"
+                className="w-full border rounded-lg pl-4 pr-36 py-1.5"
+              />
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  toast.promise(triggerTest(getValues()), {
+                    loading: "Testing Connection...",
+                    success: "Connection Successful",
+                    error: "Failed to Connect",
+                  });
+                }}
+                disabled={
+                  !getValues("connectionString") ||
+                  getValues("connectionString").length < 10
+                }
+                className="absolute right-4 text-sm text-primary hover:text-primary-darker font-medium z-10 disabled:text-rich-black/30"
+              >
+                Test Connection
+              </button>
+            </div>
           </div>
           <div className="">
             <p className="text-sm font-medium mb-1">Database Provider</p>

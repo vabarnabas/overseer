@@ -52,6 +52,18 @@ DatabaseController.get("/:id/tables", async (c) => {
   return c.json(tables);
 });
 
+DatabaseController.post("/test", async (c) => {
+  const { connectionString, type } = await c.req.json();
+
+  try {
+    await databaseService.testConnection(type, connectionString);
+  } catch (e) {
+    return c.json({ error: "Failed to Test Connection" }, 400);
+  }
+
+  return c.json({ message: "Connection Successful" });
+});
+
 DatabaseController.post("/:id/query", async (c) => {
   const { id } = c.req.param();
   const auth = getAuth(c);

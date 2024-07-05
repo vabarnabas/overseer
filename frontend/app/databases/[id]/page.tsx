@@ -63,7 +63,7 @@ export default function SpecificDatabase() {
 
   return (
     <>
-      <div className="flex items-center justify-between w-full">
+      <div className="flex items-center justify-between w-full p-4">
         <div className="flex gap-x-5 items-center">
           <div className="text-4xl text-primary">
             <ProviderIcon
