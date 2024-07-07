@@ -18,7 +18,7 @@ export default function DatabaseTableRow({ table, small }: Props) {
     <button
       onClick={() => setIsOpen((prevIsOpen) => !prevIsOpen)}
       className={clsx(
-        "flex flex-col border px-2 py-1.5 rounded-lg w-full text-start"
+        "flex flex-col hover:bg-slate-50 px-2 py-1.5 rounded-lg w-full text-start"
       )}
     >
       <div className="flex items-center justify-between w-full">

@@ -46,7 +46,20 @@ export default function EditorSection({ type }: Props) {
 
   return (
     <div className="flex flex-col mt-6 w-full flex-grow">
-      <div className="relative ">
+      <div className="gap-x-1.5 rounded-md flex items-center justify-start mb-1.5">
+        <button
+          onClick={() => {
+            runQuery();
+          }}
+          className="hover:text-primary flex items-center gap-x-1.5 px-3 py-1 rounded-md text-sm transition-all ease-in-out duration-200 hover:bg-primary/10"
+        >
+          <FaPlay className="text-xs" /> Run Query
+        </button>
+        <button className="hover:text-primary flex items-center gap-x-1.5 px-3 py-1 rounded-md text-sm transition-all ease-in-out duration-200 hover:bg-primary/10">
+          <FaSave /> Save Query
+        </button>
+      </div>
+      <div className="relative">
         <Editor
           className="overflow-hidden flex w-full rounded-md min-w-0 flex-1 absolute h-full"
           defaultLanguage="sql"
@@ -67,20 +80,7 @@ export default function EditorSection({ type }: Props) {
           }}
         />
       </div>
-      <div className="px-2 py-2 gap-x-4 rounded-md top-3 bg-white flex items-center justify-end">
-        <button className="hover:text-primary flex items-center gap-x-1.5">
-          <FaSave /> Save Query
-        </button>
-        <button
-          onClick={() => {
-            runQuery();
-          }}
-          className="hover:text-primary flex items-center gap-x-1.5"
-        >
-          <FaPlay className="text-sm" /> Run Query
-        </button>
-      </div>
-      <div className="relative border rounded-md flex flex-1 overflow-hidden">
+      <div className="relative border rounded-md flex flex-1 overflow-hidden mt-1.5">
         <span className="absolute overflow-auto h-full w-full">
           {queryData && queryData.rows ? (
             <ObjectTable rows={queryData.rows} fields={queryData.fields} />
