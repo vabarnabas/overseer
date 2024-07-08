@@ -3,6 +3,7 @@ import { Hono } from "hono";
 import { DatabaseController } from "./controllers/database.controller";
 import { cors } from "hono/cors";
 import { clerkMiddleware } from "@hono/clerk-auth";
+import { logger } from "hono/logger";
 
 const app = new Hono();
 
@@ -11,6 +12,7 @@ app.get("/", (c) => {
 });
 
 app.use(cors());
+app.use(logger());
 app.use(clerkMiddleware());
 
 app.route("/databases", DatabaseController);

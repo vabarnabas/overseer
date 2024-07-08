@@ -2,6 +2,10 @@ import { Hono } from "hono";
 import { DatabaseService } from "../services/database.service";
 import { getAuth } from "@hono/clerk-auth";
 import { BadRequestError, UnauthorizedError } from "../constants/errors";
+import { zValidator } from "@hono/zod-validator";
+import { createDatabaseSchema } from "../dto/create-database.dto";
+import { updateDatabaseSchema } from "../dto/update-database.dto";
+import { z } from "zod";
 
 const databaseService = new DatabaseService();
 
@@ -64,6 +68,33 @@ DatabaseController.post("/test", async (c) => {
   return c.json({ message: "Connection Successful" });
 });
 
+DatabaseController.post(
+  "/",
+  zValidator("json", createDatabaseSchema),
+  async (c) => {
+    const dto = c.req.valid("json");
+    const auth = getAuth(c);
+
+    if (!dto) {
+      return c.json(BadRequestError, 400);
+    }
+
+    if (!auth?.userId) {
+      return c.json(UnauthorizedError, 401);
+    }
+
+    try {
+      const database = await databaseService.create(dto);
+      return c.json(database);
+    } catch {
+      return c.json(
+        { error: "Something Went Wrong Creating Your Database Entry" },
+        400
+      );
+    }
+  }
+);
+
 DatabaseController.post("/:id/query", async (c) => {
   const { id } = c.req.param();
   const auth = getAuth(c);
@@ -96,27 +127,48 @@ DatabaseController.post("/:id/query", async (c) => {
   return c.json(result);
 });
 
-DatabaseController.post("/", async (c) => {
+DatabaseController.put(
+  "/:id",
+  zValidator("json", updateDatabaseSchema),
+  async (c) => {
+    const auth = getAuth(c);
+    const { id } = c.req.param();
+    const dto = await c.req.valid("json");
+
+    if (!dto) {
+      return c.json(BadRequestError, 400);
+    }
+
+    if (!auth?.userId) {
+      return c.json(UnauthorizedError, 401);
+    }
+
+    try {
+      const database = await databaseService.update(id, dto);
+      return c.json(database);
+    } catch {
+      return c.json(
+        { error: "Something Went Wrong Updating Your Database Entry" },
+        400
+      );
+    }
+  }
+);
+
+DatabaseController.delete("/:id", async (c) => {
   const auth = getAuth(c);
+  const { id } = c.req.param();
 
   if (!auth?.userId) {
     return c.json(UnauthorizedError, 401);
   }
 
-  const dto = await c.req.json();
-
-  if (!dto) {
-    return c.json(BadRequestError, 400);
-  }
-
   try {
-    dto.connectionString = databaseService.encrypt(dto.connectionString);
-    dto.state = "dev";
-    const database = await databaseService.create(dto);
-    return c.json(database);
+    await databaseService.delete(id);
+    return c.json({ message: "Database Deleted" });
   } catch {
     return c.json(
-      { error: "Something Went Wrong Creating Your Database Entry" },
+      { error: "Something Went Wrong Deleting Your Database Entry" },
       400
     );
   }

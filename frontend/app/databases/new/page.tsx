@@ -1,14 +1,12 @@
 "use client";
 import NeonLogo from "@/components/logo/neon-logo";
+import useDatabaseActions from "@/hooks/useDatabaseActions";
 import {
   CreateDatabase,
   createDatabaseSchema,
 } from "@/schemas/create-database.schema";
-import { useAuth, useUser } from "@clerk/nextjs";
 import { zodResolver } from "@hookform/resolvers/zod";
 import clsx from "clsx";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
 import React from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { BiLogoPostgresql } from "react-icons/bi";
@@ -16,12 +14,9 @@ import { FaAws, FaDatabase, FaFly } from "react-icons/fa6";
 import { SiMicrosoftsqlserver, SiMysql, SiRailway } from "react-icons/si";
 import { VscAzure } from "react-icons/vsc";
 import { toast } from "sonner";
-import useSWRMutation from "swr/mutation";
 
 export default function NewDatabasePage() {
-  const { getToken } = useAuth();
-  const { user } = useUser();
-  const router = useRouter();
+  const { createDatabase, testDatabaseConnection } = useDatabaseActions();
 
   const providers = [
     {
@@ -90,45 +85,9 @@ export default function NewDatabasePage() {
     formState: { errors },
   } = form;
 
-  const { trigger } = useSWRMutation(
-    "/databases",
-    async (url, { arg: formValues }: { arg: CreateDatabase }) => {
-      const token = await getToken();
-
-      await fetch(`${process.env.NEXT_PUBLIC_API_URL}${url}`, {
-        method: "POST",
-        body: JSON.stringify({ ...formValues, userId: user!.id }),
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      router.push("/");
-    }
+  const onSubmit = handleSubmit((formValues) =>
+    createDatabase.trigger(formValues)
   );
-
-  const { trigger: triggerTest } = useSWRMutation(
-    "/databases/test",
-    async (
-      url,
-      { arg }: { arg: Pick<CreateDatabase, "type" | "connectionString"> }
-    ) => {
-      const token = await getToken();
-
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${url}`, {
-        method: "POST",
-        body: JSON.stringify(arg),
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (!res.ok) {
-        throw new Error("Failed to Test Connection");
-      }
-    }
-  );
-
-  const onSubmit = handleSubmit((formValues) => trigger(formValues));
 
   watch();
 
@@ -160,7 +119,7 @@ export default function NewDatabasePage() {
               <button
                 onClick={(e) => {
                   e.preventDefault();
-                  toast.promise(triggerTest(getValues()), {
+                  toast.promise(testDatabaseConnection.trigger(getValues()), {
                     loading: "Testing Connection...",
                     success: "Connection Successful",
                     error: "Failed to Connect",

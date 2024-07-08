@@ -8,6 +8,8 @@ import {
 import { createCipheriv, createDecipheriv, randomBytes } from "crypto";
 import mysql, { PoolConnection } from "mysql2/promise";
 import sql from "mssql";
+import { CreateDatabase } from "../dto/create-database.dto";
+import { UpdateDatabase } from "../dto/update-database.dto";
 
 export class DatabaseService {
   encrypt(text: string): string {
@@ -246,7 +248,15 @@ export class DatabaseService {
     return await prisma.database.findMany({ where: { userId } });
   }
 
-  async create(dto: any) {
+  async create(dto: CreateDatabase) {
     return await prisma.database.create({ data: dto });
+  }
+
+  async update(id: string, dto: UpdateDatabase) {
+    return await prisma.database.update({ where: { id }, data: dto });
+  }
+
+  async delete(id: string) {
+    return await prisma.database.delete({ where: { id } });
   }
 }
