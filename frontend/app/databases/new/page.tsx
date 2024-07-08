@@ -14,6 +14,7 @@ import { FaAws, FaDatabase, FaFly } from "react-icons/fa6";
 import { SiMicrosoftsqlserver, SiMysql, SiRailway } from "react-icons/si";
 import { VscAzure } from "react-icons/vsc";
 import { toast } from "sonner";
+import { RiSupabaseFill } from "react-icons/ri";
 
 export default function NewDatabasePage() {
   const { createDatabase, testDatabaseConnection } = useDatabaseActions();
@@ -43,6 +44,11 @@ export default function NewDatabasePage() {
       name: "Neon",
       value: "neon",
       icon: <NeonLogo className="text-6xl" />,
+    },
+    {
+      name: "Supabase",
+      value: "supabase",
+      icon: <RiSupabaseFill className="text-6xl" />,
     },
     {
       name: "Other",
