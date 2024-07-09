@@ -1,10 +1,5 @@
 "use client";
-import NeonLogo from "@/components/logo/neon-logo";
 import useDatabaseActions from "@/hooks/useDatabaseActions";
-import {
-  CreateDatabase,
-  createDatabaseSchema,
-} from "@/schemas/create-database.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import clsx from "clsx";
 import React, { useEffect } from "react";
@@ -54,8 +49,6 @@ export default function NewDatabasePage() {
 
         const database = await await databaseResponse.json();
 
-        database.connectionString = decrypt(database.connectionString);
-
         return database as Database;
       });
     }
@@ -84,7 +77,7 @@ export default function NewDatabasePage() {
     if (!isValidating && !error && data) {
       reset({
         name: data.name,
-        connectionString: data.connectionString,
+        connectionString: decrypt(data.connectionString),
         provider: data.provider,
         type: data.type,
         state: data.state,
