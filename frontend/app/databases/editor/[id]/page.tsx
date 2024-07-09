@@ -61,6 +61,8 @@ export default function NewDatabasePage() {
     }
   );
 
+  console.log(data, isValidating, error);
+
   const form = useForm<UpdateDatabase>({
     defaultValues: {
       provider: providers[0].value,
