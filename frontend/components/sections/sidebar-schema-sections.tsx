@@ -10,27 +10,19 @@ export default function SidebarSchema() {
   const { getToken } = useAuth();
 
   const { data, isValidating, error } = useSWRImmutable(
-    `/databases/${id}`,
+    `/databases/${id}/tables`,
     async (url) => {
       const token = await getToken();
 
-      const databaseResponse = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}${url}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      const database = await databaseResponse.json();
-
       const tablesResponse = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}${url}/tables`,
+        `${process.env.NEXT_PUBLIC_API_URL}${url}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
       const tables = await tablesResponse.json();
 
-      return { database, tables };
+      return tables;
     }
   );
 
@@ -54,7 +46,7 @@ export default function SidebarSchema() {
     <div className="w-72 flex-shrink-0 pt-5 pb-4 flex flex-col items-start px-2 border-r overflow-y-auto scrollbar-hide">
       <AnimatePresence>
         <div className="flex flex-col gap-y-1 w-full">
-          {data.tables.map((table: any) => (
+          {data.map((table: any) => (
             <DatabaseTableRow small key={table.tableName} table={table} />
           ))}
         </div>

@@ -81,6 +81,14 @@ export default function DatabasesSection() {
                 className="w-52 z-10 origin-top-right rounded-xl border p-1 text-sm/6 text-rich-black bg-white transition duration-100 ease-out [--anchor-gap:var(--spacing-1)] focus:outline-none data-[closed]:scale-95 data-[closed]:opacity-0"
               >
                 <MenuItem>
+                  <Link
+                    href={`/databases/editor/${database.id}`}
+                    className="group flex w-full items-center gap-2 rounded-lg py-1.5 px-3 data-[focus]:bg-slate-100"
+                  >
+                    Edit
+                  </Link>
+                </MenuItem>
+                <MenuItem>
                   <button
                     onClick={(e) => {
                       e.stopPropagation();

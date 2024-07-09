@@ -12,7 +12,7 @@ export default function Home() {
       <div className="w-full flex items-center justify-between mb-4">
         <p className="text-2xl font-semibold">My Databases</p>
         <Link
-          href={"/databases/new"}
+          href={"/databases/editor"}
           className=" bg-primary hover:bg-primary-darker px-4 py-1.5 text-sm rounded-md text-white hover:bg-black/80"
         >
           Add Database

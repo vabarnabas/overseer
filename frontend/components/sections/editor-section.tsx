@@ -9,7 +9,7 @@ import { toast } from "sonner";
 import "monaco-editor/esm/vs/basic-languages/sql/sql.contribution";
 
 interface Props {
-  type: "postgres" | "mysql";
+  type: string;
 }
 
 export default function EditorSection({ type }: Props) {

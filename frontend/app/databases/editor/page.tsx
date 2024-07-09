@@ -1,5 +1,4 @@
 "use client";
-import NeonLogo from "@/components/logo/neon-logo";
 import useDatabaseActions from "@/hooks/useDatabaseActions";
 import {
   CreateDatabase,
@@ -9,71 +8,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import clsx from "clsx";
 import React from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { BiLogoPostgresql } from "react-icons/bi";
-import { FaAws, FaDatabase, FaFly } from "react-icons/fa6";
-import { SiMicrosoftsqlserver, SiMysql, SiRailway } from "react-icons/si";
-import { VscAzure } from "react-icons/vsc";
 import { toast } from "sonner";
-import { RiSupabaseFill } from "react-icons/ri";
+import useDatabaseProviders from "@/hooks/useDatabaseProviders";
 
 export default function NewDatabasePage() {
   const { createDatabase, testDatabaseConnection } = useDatabaseActions();
-
-  const providers = [
-    {
-      name: "Railway.app",
-      value: "railway",
-      icon: <SiRailway className="text-6xl" />,
-    },
-    {
-      name: "Fly.io",
-      value: "fly",
-      icon: <FaFly className="text-6xl" />,
-    },
-    {
-      name: "Azure",
-      value: "azure",
-      icon: <VscAzure className="text-6xl" />,
-    },
-    {
-      name: "AWS",
-      value: "aws",
-      icon: <FaAws className="text-6xl" />,
-    },
-    {
-      name: "Neon",
-      value: "neon",
-      icon: <NeonLogo className="text-6xl" />,
-    },
-    {
-      name: "Supabase",
-      value: "supabase",
-      icon: <RiSupabaseFill className="text-6xl" />,
-    },
-    {
-      name: "Other",
-      value: "other",
-      icon: <FaDatabase className="text-6xl" />,
-    },
-  ];
-
-  const systems = [
-    {
-      name: "PostgreSQL",
-      value: "postgres",
-      icon: <BiLogoPostgresql className="text-6xl" />,
-    },
-    {
-      name: "MySQL",
-      value: "mysql",
-      icon: <SiMysql className="text-6xl" />,
-    },
-    {
-      name: "MsSQL",
-      value: "mssql",
-      icon: <SiMicrosoftsqlserver className="text-6xl" />,
-    },
-  ];
+  const { providers, systems } = useDatabaseProviders();
 
   const form = useForm<CreateDatabase>({
     defaultValues: {
@@ -82,17 +22,14 @@ export default function NewDatabasePage() {
     },
     resolver: zodResolver(createDatabaseSchema),
   });
-  const {
-    register,
-    watch,
-    getValues,
-    setValue,
-    handleSubmit,
-    formState: { errors },
-  } = form;
+  const { register, watch, getValues, setValue, handleSubmit } = form;
 
   const onSubmit = handleSubmit((formValues) =>
-    createDatabase.trigger(formValues)
+    toast.promise(createDatabase.trigger(formValues), {
+      loading: "Creating Database...",
+      success: "Database Created",
+      error: "Failed to Create Database",
+    })
   );
 
   watch();
