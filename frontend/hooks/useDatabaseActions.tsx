@@ -36,7 +36,7 @@ export default function useDatabaseActions() {
         throw new Error("Failed to Create Database");
       }
 
-      router.push("/databases");
+      router.push("/");
     }
   );
 
