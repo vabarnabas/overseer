@@ -1,4 +1,5 @@
 import NeonLogo from "@/components/logo/neon-logo";
+import XataLogo from "@/components/logo/xata-logo";
 import { BiLogoPostgresql } from "react-icons/bi";
 import { FaFly, FaAws, FaDatabase } from "react-icons/fa6";
 import { RiSupabaseFill } from "react-icons/ri";
@@ -10,37 +11,42 @@ export default function useDatabaseProviders() {
     {
       name: "Railway.app",
       value: "railway",
-      icon: <SiRailway className="text-6xl" />,
+      icon: <SiRailway />,
     },
     {
       name: "Fly.io",
       value: "fly",
-      icon: <FaFly className="text-6xl" />,
+      icon: <FaFly />,
     },
     {
       name: "Azure",
       value: "azure",
-      icon: <VscAzure className="text-6xl" />,
+      icon: <VscAzure />,
     },
     {
       name: "AWS",
       value: "aws",
-      icon: <FaAws className="text-6xl" />,
+      icon: <FaAws />,
     },
     {
       name: "Neon",
       value: "neon",
-      icon: <NeonLogo className="text-6xl" />,
+      icon: <NeonLogo />,
+    },
+    {
+      name: "Xata",
+      value: "xata",
+      icon: <XataLogo />,
     },
     {
       name: "Supabase",
       value: "supabase",
-      icon: <RiSupabaseFill className="text-6xl" />,
+      icon: <RiSupabaseFill />,
     },
     {
       name: "Other",
       value: "other",
-      icon: <FaDatabase className="text-6xl" />,
+      icon: <FaDatabase />,
     },
   ];
 

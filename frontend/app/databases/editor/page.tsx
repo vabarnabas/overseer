@@ -95,6 +95,7 @@ export default function NewDatabasePage() {
                 >
                   <span
                     className={clsx(
+                      "text-5xl",
                       getValues("provider") === provider.value && "text-primary"
                     )}
                   >
@@ -122,6 +123,7 @@ export default function NewDatabasePage() {
                 >
                   <span
                     className={clsx(
+                      "text-6xl",
                       getValues("type") === system.value && "text-primary"
                     )}
                   >
