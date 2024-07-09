@@ -6,6 +6,9 @@ import { GrMysql } from "react-icons/gr";
 import { SiMicrosoftsqlserver, SiRailway } from "react-icons/si";
 import { VscAzure } from "react-icons/vsc";
 import NeonLogo from "../logo/neon-logo";
+import XataLogo from "../logo/xata-logo";
+import { RiSupabaseFill } from "react-icons/ri";
+import useDatabaseProviders from "@/hooks/useDatabaseProviders";
 
 interface Props {
   provider: string;
@@ -13,34 +16,14 @@ interface Props {
 }
 
 export default function ProviderIcon({ provider, type }: Props) {
+  const { providers, systems } = useDatabaseProviders();
+
   const getProviderIcon = () => {
-    switch (provider) {
-      case "railway":
-        return <SiRailway scale={50} />;
-      case "fly":
-        return <FaFly />;
-      case "azure":
-        return <VscAzure />;
-      case "aws":
-        return <FaAws />;
-      case "neon":
-        return <NeonLogo />;
-      default:
-        return <FaDatabase />;
-    }
+    return providers.find((p) => p.value === provider)?.icon || <FaDatabase />;
   };
 
   const getTypeIcon = () => {
-    switch (type) {
-      case "postgres":
-        return <BiLogoPostgresql />;
-      case "mysql":
-        return <GrMysql />;
-      case "mssql":
-        return <SiMicrosoftsqlserver />;
-      default:
-        return <FaDatabase />;
-    }
+    return systems.find((s) => s.value === type)?.icon || <FaDatabase />;
   };
 
   return (

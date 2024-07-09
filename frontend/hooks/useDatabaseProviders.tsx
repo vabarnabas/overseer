@@ -54,17 +54,17 @@ export default function useDatabaseProviders() {
     {
       name: "PostgreSQL",
       value: "postgres",
-      icon: <BiLogoPostgresql className="text-6xl" />,
+      icon: <BiLogoPostgresql />,
     },
     {
       name: "MySQL",
       value: "mysql",
-      icon: <SiMysql className="text-6xl" />,
+      icon: <SiMysql />,
     },
     {
       name: "MsSQL",
       value: "mssql",
-      icon: <SiMicrosoftsqlserver className="text-6xl" />,
+      icon: <SiMicrosoftsqlserver />,
     },
   ];
 

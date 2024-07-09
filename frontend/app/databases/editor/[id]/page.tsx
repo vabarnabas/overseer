@@ -71,7 +71,7 @@ export default function NewDatabasePage() {
   const { register, watch, getValues, setValue, handleSubmit, reset } = form;
 
   const onSubmit = handleSubmit((formValues) =>
-    toast.promise(updateDatabase.trigger(formValues), {
+    toast.promise(updateDatabase.trigger({ id: id as string, formValues }), {
       loading: "Updating Database...",
       success: "Database Updated",
       error: "Failed to Update Database",
@@ -85,6 +85,8 @@ export default function NewDatabasePage() {
         connectionString: data.connectionString,
         provider: data.provider,
         type: data.type,
+        state: data.state,
+        userId: data.userId,
       });
     }
   }, [data, error, isValidating, reset]);

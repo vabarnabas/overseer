@@ -42,29 +42,37 @@ export default function useDatabaseActions() {
 
   const updateDatabase = useSWRMutation(
     "/databases",
-    async (url, { arg: formValues }: { arg: UpdateDatabase }) => {
+    async (
+      url,
+      {
+        arg: { id, formValues },
+      }: { arg: { id: string; formValues: UpdateDatabase } }
+    ) => {
       const token = await getToken();
 
       formValues.connectionString = encrypt(formValues.connectionString);
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${url}`, {
-        method: "PUT",
-        body: JSON.stringify({
-          ...formValues,
-          userId: user!.id,
-          state: "development",
-        }),
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}${url}/${id}`,
+        {
+          method: "PUT",
+          body: JSON.stringify({
+            ...formValues,
+            userId: user!.id,
+            state: "development",
+          }),
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Failed to Create Database");
       }
 
-      router.push("/databases");
+      router.push("/");
     }
   );
 
@@ -111,5 +119,10 @@ export default function useDatabaseActions() {
     }
   );
 
-  return { createDatabase, updateDatabase, testDatabaseConnection, deleteDatabase };
+  return {
+    createDatabase,
+    updateDatabase,
+    testDatabaseConnection,
+    deleteDatabase,
+  };
 }
