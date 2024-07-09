@@ -49,12 +49,12 @@ export default function NewDatabasePage() {
 
         const database = await await databaseResponse.json();
 
+        database.connectionString = decrypt(database.connectionString);
+
         return database as Database;
       });
     }
   );
-
-  console.log(data, isValidating, error);
 
   const form = useForm<UpdateDatabase>({
     defaultValues: {
@@ -77,7 +77,7 @@ export default function NewDatabasePage() {
     if (!isValidating && !error && data) {
       reset({
         name: data.name,
-        connectionString: decrypt(data.connectionString),
+        connectionString: data.connectionString,
         provider: data.provider,
         type: data.type,
         state: data.state,
