@@ -4,6 +4,53 @@ import { Database } from "@/schemas/database.schema";
 import { UpdateDatabase } from "@/schemas/update-database.schema";
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { revalidateTag } from "next/cache";
+import { decrypt } from "../encryption";
+
+export async function getDatabase(id: string): Promise<Database> {
+  const { getToken } = auth();
+
+  const databaseResponse = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/databases/${id}`,
+    {
+      headers: {
+        Authorization: `Bearer ${await getToken()}`,
+      },
+    }
+  );
+
+  if (!databaseResponse.ok) {
+    throw new Error("Failed to fetch database");
+  }
+
+  const database = await databaseResponse.json();
+
+  database.connectionString = decrypt(database.connectionString);
+
+  return database;
+}
+
+export async function queryDatabase(id: string, query: string) {
+  const { getToken } = auth();
+
+  console.log("query", query);
+
+  const queryResponse = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/databases/${id}/query`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${await getToken()}`,
+      },
+      body: JSON.stringify({ query }),
+    }
+  );
+
+  if (!queryResponse.ok) {
+    throw new Error("Failed to Query Database");
+  }
+
+  return await queryResponse.json();
+}
 
 export async function createDatabase(dto: CreateDatabase): Promise<Database> {
   const user = await currentUser();
@@ -99,6 +146,5 @@ export async function testDatabaseConnection(
     throw new Error("Failed to Test Database Connection");
   }
 
-  revalidateTag("/databases");
   return await response.json();
 }

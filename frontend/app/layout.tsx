@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import Sidebar from "@/components/sidebar/sidebar";
 import Navbar from "@/components/navbar/navbar";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Toaster } from "sonner";
@@ -30,15 +29,13 @@ export default function RootLayout({
         </head>
         <body
           className={cn(
-            "h-screen flex flex-col items-center font-sans",
+            "min-h-screen flex flex-col items-center font-sans",
             inter.variable
           )}
         >
           <Navbar />
-          <div className="flex flex-grow w-full h-full overflow-hidden">
-            <div className="flex-grow w-full h-full flex flex-col p-4">
-              {children}
-            </div>
+          <div className="pt-20 flex-grow w-full h-full flex flex-col px-6 pb-4">
+            {children}
           </div>
           <Toaster position="top-right" />
         </body>

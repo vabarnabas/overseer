@@ -1,18 +1,16 @@
-"use server"
+"use server";
 import { encrypt } from "@/lib/encryption";
 import { CreateDatabase } from "@/schemas/create-database.schema";
 import { UpdateDatabase } from "@/schemas/update-database.schema";
 import { useAuth, useUser } from "@clerk/nextjs";
-import { auth, currentUser } from "@clerk/nextjs/server";
+import { auth } from "@clerk/nextjs/server";
 import { useRouter } from "next/navigation";
 import useSWRMutation from "swr/mutation";
 
-export default async function useDatabaseActions() {
+export default function useDatabaseActions() {
   const router = useRouter();
   const { getToken } = auth();
-  const {  } = await currentUser();
-
-
+  const { user } = useUser();
 
   const createDatabase = useSWRMutation(
     "/databases",

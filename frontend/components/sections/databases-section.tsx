@@ -11,6 +11,7 @@ import {
 } from "../ui/dropdown-menu";
 import { EllipsisVertical } from "lucide-react";
 import { Database } from "@/schemas/database.schema";
+import EditDatabaseButton from "../buttons/edit-database-button";
 
 export default async function DatabasesSection() {
   const { getToken } = auth();
@@ -56,7 +57,7 @@ export default async function DatabasesSection() {
                 <EllipsisVertical />
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem>Edit</DropdownMenuItem>
+                <EditDatabaseButton id={database.id} />
                 <DeleteDatabaseButton id={database.id} />
               </DropdownMenuContent>
             </DropdownMenu>

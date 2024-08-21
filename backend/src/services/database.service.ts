@@ -126,7 +126,6 @@ export class DatabaseService {
     } else if (type === "mssql") {
       return await this.withMsSQLClient(connectionString, async (pool) => {
         const result = await pool.query(query);
-        console.log(result);
         return { rows: result.recordset };
       });
     }
@@ -204,8 +203,6 @@ export class DatabaseService {
     } else if (type === "mssql") {
       return await this.withMsSQLClient(connectionString, async (client) => {
         const result = await client.query(getTablesAndColumnsQueryMsSQL);
-
-        console.log(result);
 
         const tableMap = new Map<string, { name: string; type: string }[]>();
 
