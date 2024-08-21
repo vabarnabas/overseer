@@ -13,9 +13,13 @@
     "@headlessui/react": "^2.1.2",
     "@hookform/resolvers": "^3.6.0",
     "@monaco-editor/react": "^4.6.0",
+    "@radix-ui/react-dropdown-menu": "^2.1.1",
+    "@radix-ui/react-slot": "^1.1.0",
+    "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "dt-sql-parser": "^4.0.2",
     "framer-motion": "^11.2.12",
+    "lucide-react": "^0.429.0",
     "monaco-editor": "^0.50.0",
     "monaco-sql-languages": "^0.12.2",
     "next": "14.2.4",
@@ -26,7 +30,9 @@
     "react-window": "^1.8.10",
     "sonner": "^1.5.0",
     "swr": "^2.2.5",
+    "tailwind-merge": "^2.5.2",
     "tailwind-scrollbar-hide": "^1.1.7",
+    "tailwindcss-animate": "^1.0.7",
     "zod": "^3.23.8"
   },
   "devDependencies": {

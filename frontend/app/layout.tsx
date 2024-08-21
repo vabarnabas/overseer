@@ -2,12 +2,12 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Sidebar from "@/components/sidebar/sidebar";
-import clsx from "clsx";
 import Navbar from "@/components/navbar/navbar";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Toaster } from "sonner";
+import { cn } from "@/lib/utils";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
   title: "Overseer",
@@ -29,15 +29,14 @@ export default function RootLayout({
           />
         </head>
         <body
-          className={clsx(
-            "h-screen overflow-hidden flex flex-col items-center",
-            inter.className
+          className={cn(
+            "h-screen flex flex-col items-center font-sans",
+            inter.variable
           )}
         >
           <Navbar />
           <div className="flex flex-grow w-full h-full overflow-hidden">
-            <Sidebar />
-            <div className="flex-grow w-full h-full flex flex-col">
+            <div className="flex-grow w-full h-full flex flex-col p-4">
               {children}
             </div>
           </div>

@@ -1,18 +1,20 @@
 "use client";
-import useDatabaseActions from "@/hooks/useDatabaseActions";
 import {
   CreateDatabase,
   createDatabaseSchema,
 } from "@/schemas/create-database.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import clsx from "clsx";
 import React from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import useDatabaseProviders from "@/hooks/useDatabaseProviders";
+import { cn } from "@/lib/utils";
+import {
+  createDatabase,
+  testDatabaseConnection,
+} from "@/lib/actions/database-actions";
 
 export default function NewDatabasePage() {
-  const { createDatabase, testDatabaseConnection } = useDatabaseActions();
   const { providers, systems } = useDatabaseProviders();
 
   const form = useForm<CreateDatabase>({
@@ -25,7 +27,7 @@ export default function NewDatabasePage() {
   const { register, watch, getValues, setValue, handleSubmit } = form;
 
   const onSubmit = handleSubmit((formValues) =>
-    toast.promise(createDatabase.trigger(formValues), {
+    toast.promise(createDatabase(formValues), {
       loading: "Creating Database...",
       success: "Database Created",
       error: "Failed to Create Database",
@@ -62,7 +64,7 @@ export default function NewDatabasePage() {
               <button
                 onClick={(e) => {
                   e.preventDefault();
-                  toast.promise(testDatabaseConnection.trigger(getValues()), {
+                  toast.promise(testDatabaseConnection(getValues()), {
                     loading: "Testing Connection...",
                     success: "Connection Successful",
                     error: "Failed to Connect",
@@ -88,13 +90,13 @@ export default function NewDatabasePage() {
                     setValue("provider", provider.value);
                   }}
                   key={provider.name}
-                  className={clsx(
+                  className={cn(
                     "flex flex-col items-center justify-center gap-y-2 p-4 hover:bg-slate-50 rounded-lg",
                     getValues("provider") === provider.value && "bg-slate-100"
                   )}
                 >
                   <span
-                    className={clsx(
+                    className={cn(
                       "text-5xl",
                       getValues("provider") === provider.value && "text-primary"
                     )}
@@ -116,13 +118,13 @@ export default function NewDatabasePage() {
                     setValue("type", system.value);
                   }}
                   key={system.name}
-                  className={clsx(
+                  className={cn(
                     "flex flex-col items-center justify-center gap-y-2 p-4 hover:bg-slate-50 rounded-lg",
                     getValues("type") === system.value && "bg-slate-100"
                   )}
                 >
                   <span
-                    className={clsx(
+                    className={cn(
                       "text-6xl",
                       getValues("type") === system.value && "text-primary"
                     )}

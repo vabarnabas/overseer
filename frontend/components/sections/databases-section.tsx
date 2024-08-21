@@ -1,54 +1,39 @@
-import { useAuth } from "@clerk/nextjs";
 import Link from "next/link";
 import React from "react";
-import useSWR from "swr";
 import ProviderIcon from "../provider-icon/provider-icon";
-import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
-import { BsThreeDotsVertical } from "react-icons/bs";
-import useDatabaseActions from "@/hooks/useDatabaseActions";
-import { toast } from "sonner";
+import { auth } from "@clerk/nextjs/server";
+import DeleteDatabaseButton from "../buttons/delete-database-button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
+import { EllipsisVertical } from "lucide-react";
+import { Database } from "@/schemas/database.schema";
 
-export default function DatabasesSection() {
-  const { getToken } = useAuth();
+export default async function DatabasesSection() {
+  const { getToken } = auth();
 
-  const { deleteDatabase } = useDatabaseActions();
-
-  const { data, isValidating, error } = useSWR(
-    "/databases/me",
-    async (url) => {
-      const token = await getToken();
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${url}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      return await res.json();
-    },
+  const databaseResponse = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/databases/me`,
     {
-      revalidateOnFocus: false,
-      revalidateOnMount: true,
-      refreshInterval: 0,
+      headers: { Authorization: `Bearer ${await getToken()}` },
+      cache: "no-store",
+      next: { tags: ["/database"] },
     }
   );
 
-  if (isValidating) {
-    return (
-      <div className="flex flex-grow justify-center items-center">
-        Loading...
-      </div>
-    );
+  if (!databaseResponse.ok) {
+    throw new Error("Failed to fetch databases");
   }
 
-  if (error || !data || !data.length) {
-    return (
-      <div className="flex flex-grow justify-center items-center">
-        {`We couldn't fetch your databases. Please try again later.`}
-      </div>
-    );
-  }
+  const databases: Database[] = await databaseResponse.json();
 
   return (
     <div className="w-full flex flex-col">
       <div className="flex flex-col gap-y-1">
-        {data.map((database: any) => (
+        {databases.map((database: any) => (
           <Link
             href={`/databases/${database.id}`}
             key={database.id}
@@ -66,45 +51,15 @@ export default function DatabasesSection() {
                 <p className="text-sm opacity-60 -mt-1">{`${database.type} / ${database.provider}`}</p>
               </div>
             </div>
-            <Menu>
-              <MenuButton
-                onClick={(e) => {
-                  e.stopPropagation();
-                }}
-                className="text-lg h-8 w-8 rounded-md hover:text-primary flex justify-center items-center transition-all duration-200 ease-in-out"
-              >
-                <BsThreeDotsVertical />
-              </MenuButton>
-              <MenuItems
-                transition
-                anchor="bottom end"
-                className="w-52 z-10 origin-top-right rounded-xl border p-1 text-sm/6 text-rich-black bg-white transition duration-100 ease-out [--anchor-gap:var(--spacing-1)] focus:outline-none data-[closed]:scale-95 data-[closed]:opacity-0"
-              >
-                <MenuItem>
-                  <Link
-                    href={`/databases/editor/${database.id}`}
-                    className="group flex w-full items-center gap-2 rounded-lg py-1.5 px-3 data-[focus]:bg-slate-100"
-                  >
-                    Edit
-                  </Link>
-                </MenuItem>
-                <MenuItem>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      toast.promise(deleteDatabase.trigger(database.id), {
-                        loading: "Deleting Database...",
-                        success: "Database Deleted",
-                        error: "Failed to Delete",
-                      });
-                    }}
-                    className="group flex w-full items-center gap-2 rounded-lg py-1.5 px-3 data-[focus]:bg-slate-100"
-                  >
-                    Delete
-                  </button>
-                </MenuItem>
-              </MenuItems>
-            </Menu>
+            <DropdownMenu>
+              <DropdownMenuTrigger>
+                <EllipsisVertical />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem>Edit</DropdownMenuItem>
+                <DeleteDatabaseButton id={database.id} />
+              </DropdownMenuContent>
+            </DropdownMenu>
           </Link>
         ))}
       </div>

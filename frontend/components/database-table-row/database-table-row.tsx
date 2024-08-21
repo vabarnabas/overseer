@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { BiChevronDown, BiChevronUp } from "react-icons/bi";
 import { motion } from "framer-motion";
-import clsx from "clsx";
+import { cn } from "@/lib/utils";
 
 interface Props {
   small?: boolean;
@@ -17,12 +17,12 @@ export default function DatabaseTableRow({ table, small }: Props) {
   return (
     <button
       onClick={() => setIsOpen((prevIsOpen) => !prevIsOpen)}
-      className={clsx(
+      className={cn(
         "flex flex-col hover:bg-slate-50 px-2 py-1.5 rounded-lg w-full text-start"
       )}
     >
       <div className="flex items-center justify-between w-full">
-        <p className={clsx("font-semibold", small ? "text-sm" : "text-lg")}>
+        <p className={cn("font-semibold", small ? "text-sm" : "text-lg")}>
           {table.tableName}
         </p>
         {isOpen ? (
@@ -35,7 +35,7 @@ export default function DatabaseTableRow({ table, small }: Props) {
         transition={{ duration: 0.2, ease: "easeInOut" }}
         onClick={(e) => e.stopPropagation()}
         layout
-        className={clsx(
+        className={cn(
           "w-full flex flex-col gap-y-1",
           isOpen ? "h-auto mt-3" : "h-0"
         )}
@@ -44,7 +44,7 @@ export default function DatabaseTableRow({ table, small }: Props) {
           ? table.columns.map((column) => (
               <div
                 key={`${table.tableName}_${column}`}
-                className={clsx(
+                className={cn(
                   "w-full flex items-start gap-x-3 justify-between",
                   small && "text-sm"
                 )}

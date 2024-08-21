@@ -1,20 +1,13 @@
 "use client";
 import useDatabaseActions from "@/hooks/useDatabaseActions";
 import { zodResolver } from "@hookform/resolvers/zod";
-import clsx from "clsx";
 import React, { useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { BiLogoPostgresql } from "react-icons/bi";
-import { FaAws, FaDatabase, FaFly } from "react-icons/fa6";
-import { SiMicrosoftsqlserver, SiMysql, SiRailway } from "react-icons/si";
-import { VscAzure } from "react-icons/vsc";
 import { toast } from "sonner";
-import { RiSupabaseFill } from "react-icons/ri";
 import useDatabaseProviders from "@/hooks/useDatabaseProviders";
 import { useParams } from "next/navigation";
 import useSWRImmutable from "swr/immutable";
 import { useAuth } from "@clerk/nextjs";
-import { isErrored } from "stream";
 import { errorHandler } from "@/lib/error-handler";
 import { Database } from "@/schemas/database.schema";
 import {
@@ -22,6 +15,7 @@ import {
   updateDatabaseSchema,
 } from "@/schemas/update-database.schema";
 import { decrypt } from "@/lib/encryption";
+import { cn } from "@/lib/utils";
 
 export default function NewDatabasePage() {
   const { id } = useParams();
@@ -158,13 +152,13 @@ export default function NewDatabasePage() {
                     setValue("provider", provider.value);
                   }}
                   key={provider.name}
-                  className={clsx(
+                  className={cn(
                     "flex flex-col items-center justify-center gap-y-2 p-4 hover:bg-slate-50 rounded-lg",
                     getValues("provider") === provider.value && "bg-slate-100"
                   )}
                 >
                   <span
-                    className={clsx(
+                    className={cn(
                       "text-5xl",
                       getValues("provider") === provider.value && "text-primary"
                     )}
@@ -186,13 +180,13 @@ export default function NewDatabasePage() {
                     setValue("type", system.value);
                   }}
                   key={system.name}
-                  className={clsx(
+                  className={cn(
                     "flex flex-col items-center justify-center gap-y-2 p-4 hover:bg-slate-50 rounded-lg",
                     getValues("type") === system.value && "bg-slate-100"
                   )}
                 >
                   <span
-                    className={clsx(
+                    className={cn(
                       "text-5xl",
                       getValues("type") === system.value && "text-primary"
                     )}
